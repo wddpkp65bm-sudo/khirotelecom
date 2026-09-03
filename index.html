@@ -116,6 +116,7 @@ td,th{padding:9px;border-bottom:1px solid #24466f;text-align:right;vertical-alig
   <div class="headActions">
     <button class="btn" onclick="openCart()">🛒 السلة <span id="cartCount" class="countPill">0</span></button>
     <button class="btn" onclick="shareApp()">🔗 مشاركة</button>
+    <button class="btn" onclick="enableNotifications()">🔔 إشعارات الجديد</button>
   </div>
   <div class="brandLogo" aria-label="KHIRO TELECOM KGP">
     <div class="brandMain">KH<span>I</span>RO</div><div class="brandTelecom">TELECOM</div><div class="brandKgp">KGP</div>
@@ -194,6 +195,17 @@ td,th{padding:9px;border-bottom:1px solid #24466f;text-align:right;vertical-alig
 <h3 style="margin-top:25px">🏪 إعدادات المتجر</h3>
 <div class="form"><input id="sName" placeholder="اسم المتجر"><input id="sSubtitle" placeholder="الوصف"><input id="sWhatsapp" placeholder="رقم WhatsApp مثال: 213795669558"><input id="sPin" placeholder="رمز الإدارة PIN"><input id="sWholesalePin" placeholder="كلمة سر غرفة الجملة"></div>
 <button class="btn primary" onclick="saveSettings()">💾 حفظ الإعدادات</button>
+
+<h3 style="margin-top:25px">🔔 إشعارات الزبائن</h3>
+<div class="notice">
+  فعّل الزبون الإشعارات من زر <b>🔔 إشعارات الجديد</b>. هذه النسخة جهّزت التطبيق لاستقبال Push Notifications.
+  <br>⚠️ الإرسال الحقيقي لجميع الهواتف يحتاج ربط Firebase Cloud Messaging في الخطوة التالية؛ لا نضع مفتاح الإرسال السري داخل ملف التطبيق.
+</div>
+<div class="form">
+  <input id="notificationTitle" value="جديد في KHIRO TELECOM" placeholder="عنوان الإشعار">
+  <input id="notificationText" value="وصلت سلعة جديدة! افتح التطبيق وشوف الجديد 📱" placeholder="نص الإشعار">
+</div>
+<button class="btn primary" onclick="testNotification()">🔔 تجربة الإشعار على هذا الهاتف</button>
 
 <h3 style="margin-top:25px">💾 نسخة احتياطية</h3>
 <div class="hint">صدّر نسخة قبل التعديلات الكبيرة حتى لا تضيع منتجاتك المحلية.</div>
@@ -469,7 +481,38 @@ function saveSettings(){settings.name=f("sName")||DEFAULT_SETTINGS.name;settings
 function renderAdminTables(){const sr=document.getElementById("screenRows");if(sr)sr.innerHTML=data.map((p,i)=>`<tr><td>${i+1}</td><td><img class="thumb" loading="lazy" decoding="async" src="${esc(screenImage(p))}" alt=""></td><td><b>${esc(p[0])}</b><br>${esc(p[1])}</td><td>${esc(p[2])}</td><td>${money(p[3])}</td><td><button class="btn" onclick="editScreen(${i})">تعديل</button> <button class="btn danger" onclick="deleteScreen(${i})">حذف</button></td></tr>`).join("");const br=document.getElementById("batteryRows");if(br)br.innerHTML=batteries.map((p,i)=>`<tr><td>${i+1}</td><td><b>${esc(p[0])}</b><br>${esc(p[1])}</td><td>${money(p[3])}</td><td><button class="btn" onclick="editBattery(${i})">تعديل</button> <button class="btn danger" onclick="deleteBattery(${i})">حذف</button></td></tr>`).join("");const cr=document.getElementById("chargeRows");if(cr)cr.innerHTML=charges.map((p,i)=>`<tr><td>${i+1}</td><td><b>${esc(p[0])}</b><br>${esc(p[1])}</td><td>${money(p[3])}</td><td><button class="btn" onclick="editCharge(${i})">تعديل</button> <button class="btn danger" onclick="deleteCharge(${i})">حذف</button></td></tr>`).join("");const vr=document.getElementById("coverRows");if(vr)vr.innerHTML=covers.map((p,i)=>`<tr><td>${i+1}</td><td><b>${esc(p[0])}</b><br>${esc(p[1])}</td><td>${money(p[3])}</td><td><button class="btn" onclick="editCover(${i})">تعديل</button> <button class="btn danger" onclick="deleteCover(${i})">حذف</button></td></tr>`).join("")}
 
 function exportBackup(){const payload={data,batteries,charges,covers,settings,createdAt:new Date().toISOString()};const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="KHIRO-TELECOM-backup.json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
-function importBackup(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const x=JSON.parse(reader.result);if(!Array.isArray(x.data)||!Array.isArray(x.batteries))throw new Error();data=x.data;batteries=x.batteries;charges=Array.isArray(x.charges)?x.charges:[];covers=Array.isArray(x.covers)?x.covers:[];settings={...DEFAULT_SETTINGS,...(x.settings||{})};saveAll();applySettings();brandsUI();renderScreens();renderBatteries();renderCharges();renderCovers();alert("تم استرجاع النسخة الاحتياطية.")}catch(err){alert("الملف غير صالح.")}};reader.readAsText(file);e.target.value=""}
+function importBackup(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const x=JSON.parse(reader.result);if(!Array.isArray(x.data)||!Array.isArray(x.batteries))throw new Error();data=x.data;batteries=x.batteries;charges=Array.isArray(x.charges)?x.charges:[];covers=Array.isArray(x.covers)?x.covers:[];settings={...DEFAULT_SETTINGS,...(x.settings||{})};saveAll();
+async function enableNotifications(){
+  if(!("Notification" in window)){
+    return alert("هذا الهاتف/المتصفح لا يدعم الإشعارات.");
+  }
+  if(!window.isSecureContext && location.hostname!=="localhost"){
+    return alert("الإشعارات تحتاج رابط HTTPS. رابط GitHub Pages مناسب.");
+  }
+  try{
+    const permission = await Notification.requestPermission();
+    if(permission==="granted"){
+      localStorage.setItem("kgp_notifications_enabled","1");
+      alert("✅ تم تفعيل إشعارات الجديد على هذا الهاتف.\nالخطوة القادمة: نربط Firebase حتى تصل الإشعارات لكل الزبائن.");
+      testNotification();
+    }else{
+      alert("لم يتم السماح بالإشعارات. يمكنك تفعيلها من إعدادات المتصفح/الهاتف.");
+    }
+  }catch(e){
+    alert("تعذر تفعيل الإشعارات على هذا الجهاز.");
+  }
+}
+
+function testNotification(){
+  if(!("Notification" in window) || Notification.permission!=="granted"){
+    return alert("فعّل إشعارات الجديد أولاً.");
+  }
+  const title = document.getElementById("notificationTitle")?.value || "جديد في KHIRO TELECOM";
+  const body = document.getElementById("notificationText")?.value || "وصلت سلعة جديدة! 📱";
+  new Notification(title,{body});
+}
+
+applySettings();brandsUI();renderScreens();renderBatteries();renderCharges();renderCovers();alert("تم استرجاع النسخة الاحتياطية.")}catch(err){alert("الملف غير صالح.")}};reader.readAsText(file);e.target.value=""}
 function resetAll(){if(!confirm("سيتم حذف تعديلاتك المحلية وإرجاع القوائم الأصلية + آخر تحديث. هل أنت متأكد؟"))return;data=clone(SCREEN_DEFAULTS).concat(clone(NEW_SCREEN_DEFAULTS));batteries=clone(BATTERY_DEFAULTS).concat(clone(NEW_BATTERY_DEFAULTS));charges=clone(CHARGE_DEFAULTS);covers=clone(COVER_DEFAULTS);settings={...DEFAULT_SETTINGS};basket=[];priceMode="retail";saveAll();applySettings();brandsUI();renderScreens();renderBatteries();renderCharges();renderCovers();alert("تم إرجاع البيانات الأصلية + آخر تحديث.")}
 
 applySettings();brandsUI();renderScreens();renderBatteries();renderCharges();renderCovers();
