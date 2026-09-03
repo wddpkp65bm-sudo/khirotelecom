@@ -28,6 +28,9 @@ textarea{min-height:85px;resize:vertical}input:focus,select:focus,textarea:focus
 .brandBadge{position:absolute;top:12px;right:12px;z-index:3;background:rgba(11,99,246,.85);border:1px solid rgba(255,210,26,.8);padding:6px 9px;border-radius:10px;font-size:11px;font-weight:900}
 .body{padding:14px}.muted{color:var(--muted);font-size:12px}.title{font-size:17px;font-weight:800;margin:6px 0;line-height:1.35}
 .price{font-size:20px;font-weight:900;margin:10px 0;color:var(--yellow)}.actions{display:flex;gap:8px}.actions button{flex:1}
+.priceUnset{font-size:16px;font-weight:900;margin:10px 0;color:#ffd21a;line-height:1.4}
+.priceAsk{display:block;width:100%;text-align:center;text-decoration:none;background:#0b63f6;border:1px solid #0b63f6;color:#fff;padding:11px 12px;border-radius:12px;font-weight:900;cursor:pointer}
+.priceAsk:hover{filter:brightness(1.08)}
 .section{display:none}.section.show{display:block}.panel{background:#0b192b;border:1px solid #31547e;border-radius:18px;padding:16px;margin-top:18px}
 .form{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:9px;margin:12px 0}.hint{color:#9db0c8;font-size:12px;line-height:1.6}
 .tableWrap{overflow:auto;margin-top:15px}table{width:100%;border-collapse:collapse;font-size:12px;min-width:650px}
@@ -214,6 +217,19 @@ function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&l
 function norm(v){return String(v??"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[أإآ]/g,"ا").replace(/ى/g,"ي").replace(/ة/g,"ه").replace(/[٠-٩]/g,d=>String("٠١٢٣٤٥٦٧٨٩".indexOf(d))).replace(/[^a-z0-9\u0600-\u06ff]+/g," ").trim()}
 function money(v){return Number(v||0).toLocaleString("fr-DZ")+" دج"}
 function displayPrice(p){const base=Number(p[3]||0);if(base===0)return 0;return priceMode==="wholesale"?base:base+300}
+function priceUnset(p){return Number(p[3]||0)===0}
+function priceView(p){
+  if(priceUnset(p)) return '<div class="priceUnset">لم يتم تحديد السعر بعد</div>';
+  return '<div class="price">'+money(displayPrice(p))+'</div>';
+}
+function askPrice(type,i){
+  const p=type==="b"?batteries[i]:data[i];
+  if(!p||!priceUnset(p))return;
+  const kind=type==="b"?"بطارية":"شاشة";
+  const msg=`السلام عليكم ${settings.name}، أريد معرفة سعر ${kind}:\nالماركة: ${p[0]}\nالموديل: ${p[1]}\nالنوع: ${p[2]}`;
+  const phone=String(settings.whatsapp).replace(/\D/g,"");
+  window.open("https://wa.me/"+phone+"?text="+encodeURIComponent(msg),"_blank");
+}
 function priceLabel(){return priceMode==="wholesale"?"سعر الجملة":"سعر التجزئة"}
 function applySettings(){document.getElementById("shopName").innerHTML=esc(settings.name).replace("KGP","<span>KGP</span>");document.getElementById("shopSubtitle").textContent=settings.subtitle;document.getElementById("footerName").textContent=settings.name;document.getElementById("footerPhone").textContent=String(settings.whatsapp).replace(/^213/,"0");document.getElementById("sName").value=settings.name;document.getElementById("sSubtitle").value=settings.subtitle;document.getElementById("sWhatsapp").value=settings.whatsapp;document.getElementById("sPin").value=settings.pin;document.getElementById("sWholesalePin").value=settings.wholesalePin||DEFAULT_SETTINGS.wholesalePin}
 function brandsUI(){document.getElementById("brands").innerHTML=brandNames.map(x=>`<button class="chip ${x===brand?"active":""}" onclick="brand='${x}';brandsUI();renderScreens()">${brandDisplay[x]||x}</button>`).join("")}
@@ -239,7 +255,7 @@ function renderScreens(){
     const text=norm(p.slice(0,3).join(" ")+" "+(brandAliases[p[0]]||""));
     if((brand==="الكل"||p[0]===brand)&&(!tokens.length||tokens.every(t=>text.includes(t)))){
       shown++;
-      cards.push(`<article class="card"><div class="picWrap"><span class="brandBadge">${esc(brandDisplay[p[0]]||p[0])}</span><img class="pic" loading="lazy" decoding="async" src="${esc(screenImage(p))}" alt="${esc(p[0]+" "+p[1])}"></div><div class="body"><div class="muted">${esc(brandDisplay[p[0]]||p[0])} • ${esc(p[2])}</div><div class="title">${esc(p[1])}</div><div class="muted">النوع: ${esc(p[2])}</div><div class="muted">${priceLabel()}</div><div class="price">${money(displayPrice(p))}</div><div class="actions"><button class="btn primary" onclick="addCart('s',${i})">🛒 إضافة للسلة</button></div></div></article>`);
+      cards.push(`<article class="card"><div class="picWrap"><span class="brandBadge">${esc(brandDisplay[p[0]]||p[0])}</span><img class="pic" loading="lazy" decoding="async" src="${esc(screenImage(p))}" alt="${esc(p[0]+" "+p[1])}"></div><div class="body"><div class="muted">${esc(brandDisplay[p[0]]||p[0])} • ${esc(p[2])}</div><div class="title">${esc(p[1])}</div><div class="muted">النوع: ${esc(p[2])}</div><div class="muted">${priceLabel()}</div>${priceView(p)}<div class="actions">${priceUnset(p)?`<button class="priceAsk" onclick="askPrice('s',${i})">💬 اسأل عن السعر</button>`:`<button class="btn primary" onclick="addCart('s',${i})">🛒 إضافة للسلة</button>`}</div></div></article>`);
     }
   });
 
@@ -250,7 +266,7 @@ function renderScreens(){
   if(document.getElementById("adminSection").classList.contains("show"))renderAdminTables();
   updateCount();
 }
-function renderBatteries(){const q=norm(document.getElementById("search").value),out=document.getElementById("batteryProducts");let shown=0;out.innerHTML="";batteries.forEach((p,i)=>{const text=norm(p.slice(0,3).join(" "));if(!q||q.split(" ").every(t=>text.includes(t))){shown++;out.innerHTML+=`<article class="card"><div class="picWrap"><img class="pic" loading="lazy" decoding="async" style="width:145px;height:170px" src="${esc(batteryImage(p))}" alt="بطارية"></div><div class="body"><div class="muted">${esc(p[0])}</div><div class="title">${esc(p[1])}</div><div class="muted">${priceLabel()}</div><div class="price">${money(displayPrice(p))}</div><div class="actions"><button class="btn primary" onclick="addCart('b',${i})">🛒 إضافة للسلة</button></div></div></article>`}});if(!shown)out.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:#aaa">لا توجد نتائج.</div>';document.getElementById("batteryCount").textContent=`(${batteries.length} بطارية)`;if(document.getElementById("adminSection").classList.contains("show"))renderAdminTables();updateCount()}
+function renderBatteries(){const q=norm(document.getElementById("search").value),out=document.getElementById("batteryProducts");let shown=0;out.innerHTML="";batteries.forEach((p,i)=>{const text=norm(p.slice(0,3).join(" "));if(!q||q.split(" ").every(t=>text.includes(t))){shown++;out.innerHTML+=`<article class="card"><div class="picWrap"><img class="pic" loading="lazy" decoding="async" style="width:145px;height:170px" src="${esc(batteryImage(p))}" alt="بطارية"></div><div class="body"><div class="muted">${esc(p[0])}</div><div class="title">${esc(p[1])}</div><div class="muted">${priceLabel()}</div>${priceView(p)}<div class="actions">${priceUnset(p)?`<button class="priceAsk" onclick="askPrice('b',${i})">💬 اسأل عن السعر</button>`:`<button class="btn primary" onclick="addCart('b',${i})">🛒 إضافة للسلة</button>`}</div></div></article>`}});if(!shown)out.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:#aaa">لا توجد نتائج.</div>';document.getElementById("batteryCount").textContent=`(${batteries.length} بطارية)`;if(document.getElementById("adminSection").classList.contains("show"))renderAdminTables();updateCount()}
 
 function addCart(type,i){const key=type+":"+i,x=basket.find(z=>z.k===key);if(x)x.q++;else basket.push({k:key,q:1});saveAll();updateCount();openCart()}
 function getProduct(x){const [type,idx]=String(x.k).split(":");return type==="b"?batteries[Number(idx)]:data[Number(idx)]}
