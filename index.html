@@ -227,7 +227,29 @@ function batteryImage(p){return p[4]||"data:image/svg+xml;charset=UTF-8,"+encode
 
 function showCatalog(which){const screens=which==="screens";document.getElementById("screenSection").classList.toggle("show",screens);document.getElementById("batterySection").classList.toggle("show",!screens);document.getElementById("adminSection").classList.remove("show");document.getElementById("screenTab").classList.toggle("primary",screens);document.getElementById("batteryTab").classList.toggle("primary",!screens);document.getElementById("catalogTitle").innerHTML=(screens?'📱 الشاشات':'🔋 البطاريات')+' <span class="muted" id="screenCount"></span>'+ (priceMode==='wholesale'?' <button class="btn" onclick="exitWholesale()" style="margin-right:8px">🔓 خروج من الجملة</button>':'');if(screens)renderScreens();else renderBatteries();window.scrollTo({top:0,behavior:"smooth"})}
 
-function renderScreens(){const q=norm(document.getElementById("search").value),out=document.getElementById("products");let shown=0;out.innerHTML="";data.forEach((p,i)=>{const text=norm(p.slice(0,3).join(" ")+" "+(brandAliases[p[0]]||""));if((brand==="الكل"||p[0]===brand)&&(!q||q.split(" ").every(t=>text.includes(t)))){shown++;out.innerHTML+=`<article class="card"><div class="picWrap"><span class="brandBadge">${esc(brandDisplay[p[0]]||p[0])}</span><img class="pic" loading="lazy" decoding="async" src="${esc(screenImage(p))}" alt="${esc(p[0]+" "+p[1])}"></div><div class="body"><div class="muted">${esc(brandDisplay[p[0]]||p[0])} • ${esc(p[2])}</div><div class="title">${esc(p[1])}</div><div class="muted">النوع: ${esc(p[2])}</div><div class="muted">${priceLabel()}</div><div class="price">${money(displayPrice(p))}</div><div class="actions"><button class="btn primary" onclick="addCart('s',${i})">🛒 إضافة للسلة</button></div></div></article>`}});if(!shown)out.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:#aaa">🔎<h3 style="color:#fff">لا توجد نتائج</h3></div>';const c=document.getElementById("screenCount");if(c)c.textContent=`(${data.length} منتج)`;if(document.getElementById("adminSection").classList.contains("show"))renderAdminTables();updateCount()}
+function renderScreens(){
+  const q=norm(document.getElementById("search").value);
+  const ignoredScreenTerms=new Set(["lcd","aff","screen","screens","شاشه","شاشات","شاشة"]);
+  const tokens=q.split(" ").filter(t=>t && !ignoredScreenTerms.has(t));
+  const out=document.getElementById("products");
+  const cards=[];
+  let shown=0;
+
+  data.forEach((p,i)=>{
+    const text=norm(p.slice(0,3).join(" ")+" "+(brandAliases[p[0]]||""));
+    if((brand==="الكل"||p[0]===brand)&&(!tokens.length||tokens.every(t=>text.includes(t)))){
+      shown++;
+      cards.push(`<article class="card"><div class="picWrap"><span class="brandBadge">${esc(brandDisplay[p[0]]||p[0])}</span><img class="pic" loading="lazy" decoding="async" src="${esc(screenImage(p))}" alt="${esc(p[0]+" "+p[1])}"></div><div class="body"><div class="muted">${esc(brandDisplay[p[0]]||p[0])} • ${esc(p[2])}</div><div class="title">${esc(p[1])}</div><div class="muted">النوع: ${esc(p[2])}</div><div class="muted">${priceLabel()}</div><div class="price">${money(displayPrice(p))}</div><div class="actions"><button class="btn primary" onclick="addCart('s',${i})">🛒 إضافة للسلة</button></div></div></article>`);
+    }
+  });
+
+  out.innerHTML=cards.join("");
+  if(!shown)out.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:#aaa">🔎<h3 style="color:#fff">لا توجد نتائج</h3></div>';
+  const c=document.getElementById("screenCount");
+  if(c)c.textContent=`(${data.length} منتج)`;
+  if(document.getElementById("adminSection").classList.contains("show"))renderAdminTables();
+  updateCount();
+}
 function renderBatteries(){const q=norm(document.getElementById("search").value),out=document.getElementById("batteryProducts");let shown=0;out.innerHTML="";batteries.forEach((p,i)=>{const text=norm(p.slice(0,3).join(" "));if(!q||q.split(" ").every(t=>text.includes(t))){shown++;out.innerHTML+=`<article class="card"><div class="picWrap"><img class="pic" loading="lazy" decoding="async" style="width:145px;height:170px" src="${esc(batteryImage(p))}" alt="بطارية"></div><div class="body"><div class="muted">${esc(p[0])}</div><div class="title">${esc(p[1])}</div><div class="muted">${priceLabel()}</div><div class="price">${money(displayPrice(p))}</div><div class="actions"><button class="btn primary" onclick="addCart('b',${i})">🛒 إضافة للسلة</button></div></div></article>`}});if(!shown)out.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:#aaa">لا توجد نتائج.</div>';document.getElementById("batteryCount").textContent=`(${batteries.length} بطارية)`;if(document.getElementById("adminSection").classList.contains("show"))renderAdminTables();updateCount()}
 
 function addCart(type,i){const key=type+":"+i,x=basket.find(z=>z.k===key);if(x)x.q++;else basket.push({k:key,q:1});saveAll();updateCount();openCart()}
@@ -261,20 +283,28 @@ function closePin(){document.getElementById("pinModal").classList.remove("show")
 function checkPin(){if(document.getElementById("pinInput").value===String(settings.pin)){closePin();document.getElementById("adminSection").classList.add("show");document.getElementById("screenSection").classList.remove("show");document.getElementById("batterySection").classList.remove("show");renderAdminTables();window.scrollTo({top:0,behavior:"smooth"})}else alert("رمز الإدارة غير صحيح.")}
 document.getElementById("pinInput").addEventListener("keydown",e=>{if(e.key==="Enter")checkPin()});document.getElementById("wholesalePinInput").addEventListener("keydown",e=>{if(e.key==="Enter")checkWholesalePin()})
 
-// تشغيل البحث مباشرة عند الكتابة والضغط على Enter
+// بحث سريع وخفيف: لا نعيد بناء الصفحة عدة مرات أثناء الكتابة
 const searchInput=document.getElementById("search");
-let searchTimer;
+let searchFrame=0;
+let lastSearchValue="";
+
 function runSearch(){
-  clearTimeout(searchTimer);
-  searchTimer=setTimeout(()=>{
+  const value=searchInput.value;
+  if(value===lastSearchValue)return;
+  lastSearchValue=value;
+
+  cancelAnimationFrame(searchFrame);
+  searchFrame=requestAnimationFrame(()=>{
     if(document.getElementById("batterySection").classList.contains("show")) renderBatteries();
     else if(document.getElementById("screenSection").classList.contains("show")) renderScreens();
-  },120);
+  });
 }
+
 searchInput.addEventListener("input",runSearch);
 searchInput.addEventListener("keydown",e=>{
   if(e.key==="Enter"){
-    clearTimeout(searchTimer);
+    cancelAnimationFrame(searchFrame);
+    lastSearchValue=searchInput.value;
     if(document.getElementById("batterySection").classList.contains("show")) renderBatteries();
     else renderScreens();
   }
