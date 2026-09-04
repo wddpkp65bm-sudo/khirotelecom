@@ -67,7 +67,7 @@ td,th{padding:9px;border-bottom:1px solid #24466f;text-align:right;vertical-alig
 .siteHeader{position:relative;background:#06101d;border-bottom:1px solid #163454}.headWrap{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:18px;padding-top:18px;padding-bottom:10px}.headActions{display:flex;gap:8px;justify-content:flex-start}.countPill{display:inline-flex;min-width:20px;height:20px;align-items:center;justify-content:center;border-radius:50%;background:var(--yellow);color:#07111f;font-size:11px;margin-right:3px}.brandLogo{text-align:center;direction:ltr;line-height:.8;position:relative}.brandMain{font-size:clamp(42px,7vw,72px);font-weight:1000;letter-spacing:-4px;color:#f8fbff;text-shadow:1px 2px 0 #000}.brandMain span{color:#f4d000}.brandTelecom{display:inline-block;margin-top:6px;padding:5px 16px;border:2px solid #f4d000;border-radius:7px;font-size:clamp(13px,2vw,21px);font-weight:1000;letter-spacing:2px;color:#fff}.brandKgp{color:var(--yellow);font-size:22px;font-weight:1000;margin-top:7px;letter-spacing:2px}.headTitle{text-align:right;font-size:20px}.headTitle b span{color:var(--yellow)}.headTitle small{display:block;color:var(--muted);font-size:13px;margin-top:8px}.navWrap{padding-top:4px;padding-bottom:16px}.navWrap #search{margin-top:0;height:54px;border-radius:10px;background:#081729;border-color:#294768;font-size:15px}.navWrap nav{padding-top:14px}.chip{border-radius:10px;background:#071525;padding:10px 16px}.catalogToolbar{display:flex;justify-content:space-between;gap:12px;align-items:center;border-top:1px solid #152d49;border-bottom:1px solid #152d49;padding:18px 0;margin-top:4px}.toolbarSide{display:flex;gap:9px;flex-wrap:wrap}.catalogHeading{display:flex;justify-content:flex-start;align-items:center;margin:24px 0 16px}.catalogHeading h2{margin:0;font-size:28px}.sectionIcon{color:var(--blue)}.featuresGrid{max-width:1150px;margin:24px auto 10px;padding:0 16px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.feature{background:#09182b;border:1px solid #29476c;border-radius:12px;padding:22px;text-align:center;min-height:105px}.feature b{display:block;color:var(--yellow);font-size:18px;margin-bottom:8px}.feature span{display:block;color:#b6c5d7;font-size:13px;line-height:1.6}.adminQuick{max-width:1150px;margin:18px auto;padding:0 16px 20px;border-bottom:1px solid #142a43}.adminCards{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}.adminCard{min-height:160px;border:1px solid #29476c;border-radius:12px;background:#09182b;color:var(--text);padding:20px 12px;cursor:pointer;font:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}.adminCard:first-line{font-size:30px}.adminCard b{font-size:16px}.adminCard span{font-size:12px;color:#aabbd0;line-height:1.5}.adminCard:hover{border-color:var(--blue)}
 @media(max-width:760px){.headWrap{grid-template-columns:1fr auto;grid-template-areas:"logo actions" "title title"}.brandLogo{grid-area:logo;text-align:right}.headActions{grid-area:actions;justify-content:flex-start}.headTitle{grid-area:title;text-align:right}.catalogToolbar{align-items:stretch;flex-direction:column}.toolbarSide{justify-content:space-between}.featuresGrid{grid-template-columns:1fr;gap:10px}.adminCards{grid-template-columns:repeat(2,1fr);gap:10px}.adminCard{min-height:125px}.catalogHeading h2{font-size:23px}}
 @media(max-width:420px){.brandMain{font-size:39px}.brandTelecom{font-size:11px;padding:4px 10px}.brandKgp{font-size:16px}.headTitle{font-size:16px}.headTitle small{font-size:11px}.headActions .btn{padding:8px 9px}.toolbarSide .btn{flex:1}.featuresGrid{padding:0 10px}.adminQuick{padding:0 10px 14px}.adminCards{grid-template-columns:repeat(2,1fr)}}
-</style>
+.searchHelp{font-size:11px;color:#8fa0b5;margin-top:6px;text-align:center;line-height:1.5}.catalogToolbar .toolbarSide{flex-wrap:wrap}.catalogToolbar .toolbarSide .btn{min-width:105px}@media(max-width:600px){.catalogToolbar .toolbarSide{width:100%}.catalogToolbar .toolbarSide .btn{flex:1 1 45%;min-width:0}.searchHelp{font-size:10px}}</style>
 </head>
 <body>
 
@@ -82,7 +82,9 @@ td,th{padding:9px;border-bottom:1px solid #24466f;text-align:right;vertical-alig
   <div class="headTitle"><b>KHIRO TELECOM <span>KGP</span></b><small id="shopSubtitle">كتالوج قطع غيار الهواتف</small></div>
 </div>
 <div class="wrap navWrap">
-  <input id="search" placeholder="🔎 ابحث عن شاشة أو بطارية (مثال: Samsung A15)...">
+  <input id="search" autocomplete="off" enterkeyhint="search"
+    placeholder="🔎 ابحث بالماركة أو الموديل… مثال: A15 / Samsung / coque / nappe charge">
+  <div class="searchHelp">💡 كوفر = coque = cover = case • ناب شارج = nappe charge = charging flex • يمكنك كتابة الموديل فقط.</div>
   <nav id="brands"></nav>
 </div></header>
 
@@ -92,6 +94,8 @@ td,th{padding:9px;border-bottom:1px solid #24466f;text-align:right;vertical-alig
   <div class="toolbarSide">
     <button class="btn primary" id="screenTab" onclick="showCatalog('screens')">🖥️ الشاشات</button>
     <button class="btn" id="batteryTab" onclick="showCatalog('batteries')">🔋 البطاريات</button>
+    <button class="btn" id="coverTab" onclick="showCatalog('covers')">📱 الكوفرات</button>
+    <button class="btn" id="chargeTab" onclick="showCatalog('charges')">🔌 ناب شارج</button>
   </div>
   <div class="toolbarSide">
     <button class="btn green" onclick="openWholesale()">👥 سعر الجملة</button>
@@ -108,6 +112,18 @@ td,th{padding:9px;border-bottom:1px solid #24466f;text-align:right;vertical-alig
 <div id="batteryProducts" class="grid"></div>
 </div></section>
 
+<section id="coverSection" class="section"><div class="panel">
+<div class="top"><h2>📱 كتالوج الكوفرات <span class="muted" id="coverCount"></span></h2><button class="btn" onclick="showCatalog('screens')">📱 الشاشات</button></div>
+<div class="hint">كوفرات وحمايات الهواتف. أضف الموديل والنوع/اللون والسعر من لوحة الإدارة.</div>
+<div id="coverProducts" class="grid"></div>
+</div></section>
+
+<section id="chargeSection" class="section"><div class="panel">
+<div class="top"><h2>🔌 كتالوج ناب شارج <span class="muted" id="chargeCount"></span></h2><button class="btn" onclick="showCatalog('screens')">📱 الشاشات</button></div>
+<div class="hint">Nappe de charge / Charging Flex / فلاتة الشحن. ابحث باسم الهاتف أو رقم القطعة.</div>
+<div id="chargeProducts" class="grid"></div>
+</div></section>
+
 <section id="adminSection" class="section"><div class="panel">
 <div class="top"><h2>⚙️ إدارة المتجر</h2><button class="btn" onclick="closeAdmin()">إغلاق</button></div>
 <div class="notice">🔒 رمز الإدارة الافتراضي: <b>2004</b>. غيّره من إعدادات المتجر. <br>🏪 غرفة الجملة لها كلمة سر مستقلة.</div>
@@ -119,6 +135,16 @@ td,th{padding:9px;border-bottom:1px solid #24466f;text-align:right;vertical-alig
 <h3 style="margin-top:25px">🔋 إضافة / تعديل بطارية</h3><div class="notice">💡 البطاريات الجديدة المضافة في آخر تحديث سعرها الافتراضي <b>00 دج</b>. عدّل النوع والسعر من هنا.</div>
 <div class="form"><input id="fbbrand" placeholder="الماركة"><input id="fbmodel" placeholder="الموديل / رقم البطارية"><input id="fbprice" type="number" value="0" placeholder="السعر دج"><input id="fbimage" placeholder="رابط الصورة (اختياري)"></div>
 <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" id="batterySaveBtn" onclick="saveBatteryProduct()">+ إضافة بطارية</button><button class="btn" onclick="cancelBatteryEdit()">إلغاء التعديل</button></div>
+
+<h3 style="margin-top:25px">📱 إضافة / تعديل كوفر</h3>
+<div class="notice">💡 أضف الماركة والموديل، ويمكنك كتابة اللون أو النوع. السعر الافتراضي للمنتج الجديد <b>00 دج</b>.</div>
+<div class="form"><input id="fcbrand" placeholder="الماركة"><input id="fcmodel" placeholder="الموديل"><input id="fctype" placeholder="النوع / اللون (اختياري)"><input id="fcprice" type="number" value="0" placeholder="السعر دج"><input id="fcimage" placeholder="رابط الصورة (اختياري)"></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" id="coverSaveBtn" onclick="saveCoverProduct()">+ إضافة كوفر</button><button class="btn" onclick="cancelCoverEdit()">إلغاء التعديل</button></div>
+
+<h3 style="margin-top:25px">🔌 إضافة / تعديل ناب شارج</h3>
+<div class="notice">💡 اكتب موديل الهاتف أو رقم القطعة. يمكنك استعمال: Nappe charge / Charging Flex / Connecteur de charge.</div>
+<div class="form"><input id="fchbrand" placeholder="الماركة"><input id="fchmodel" placeholder="الموديل / رقم الناب"><input id="fchtype" placeholder="النوع (اختياري)"><input id="fchprice" type="number" value="0" placeholder="السعر دج"><input id="fchimage" placeholder="رابط الصورة (اختياري)"></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" id="chargeSaveBtn" onclick="saveChargeProduct()">+ إضافة ناب شارج</button><button class="btn" onclick="cancelChargeEdit()">إلغاء التعديل</button></div>
 
 <h3 style="margin-top:25px">🏪 إعدادات المتجر</h3>
 <div class="form"><input id="sName" placeholder="اسم المتجر"><input id="sSubtitle" placeholder="الوصف"><input id="sWhatsapp" placeholder="رقم WhatsApp مثال: 213795669558"><input id="sPin" placeholder="رمز الإدارة PIN"><input id="sWholesalePin" placeholder="كلمة سر غرفة الجملة"></div>
@@ -136,6 +162,10 @@ td,th{padding:9px;border-bottom:1px solid #24466f;text-align:right;vertical-alig
 <div class="tableWrap"><table><thead><tr><th>#</th><th>الصورة</th><th>المنتج</th><th>النوع</th><th>سعر الجملة</th><th>إجراء</th></tr></thead><tbody id="screenRows"></tbody></table></div>
 <h3 style="margin-top:25px">🔋 البطاريات</h3>
 <div class="tableWrap"><table><thead><tr><th>#</th><th>المنتج</th><th>السعر</th><th>إجراء</th></tr></thead><tbody id="batteryRows"></tbody></table></div>
+<h3 style="margin-top:25px">📱 الكوفرات</h3>
+<div class="tableWrap"><table><thead><tr><th>#</th><th>المنتج</th><th>النوع</th><th>السعر</th><th>إجراء</th></tr></thead><tbody id="coverRows"></tbody></table></div>
+<h3 style="margin-top:25px">🔌 ناب شارج</h3>
+<div class="tableWrap"><table><thead><tr><th>#</th><th>المنتج</th><th>النوع</th><th>السعر</th><th>إجراء</th></tr></thead><tbody id="chargeRows"></tbody></table></div>
 </div></section>
 </main>
 <section class="featuresGrid" aria-label="مميزات المتجر">
@@ -202,8 +232,11 @@ const brandNames=["الكل","Ace","Cond","Google","Honor","Huawei","Infinix","I
 const brandDisplay={Samsung:"Samsung",iPhone:"Apple",Huawei:"Huawei",Honor:"Honor",Oppo:"Oppo",OnePlus:"OnePlus",Redmi:"Redmi",Poco:"Poco",Realme:"Realme",Vivo:"Vivo",Infinix:"Infinix",Tecno:"Tecno",Google:"Google",Itel:"Itel",Nokia:"Nokia",Ace:"Ace",Cond:"Cond","Tablet / Other":"Tablettes / Autres",Maxphone:"Maxphone",Stram:"Stram",Motorola:"Motorola",Iris:"Iris",Tab:"Tab"};
 const brandAliases={Samsung:"سامسونج samsung sam سام",iPhone:"ايفون آيفون",Huawei:"هواوي",Honor:"هونر",Oppo:"اوبو",OnePlus:"وان بلس",Redmi:"ريدمي",Poco:"بوكو",Realme:"ريلمي",Vivo:"فيفو",Infinix:"انفينيكس",Tecno:"تكنو",Google:"جوجل",Itel:"ايتل",Nokia:"نوكيا",Ace:"ايس",Cond:"كوند"};
 
-let data=loadArray("kgp_data",SCREEN_DEFAULTS), batteries=loadArray("kgp_batteries",BATTERY_DEFAULTS), basket=loadArray("kgp_cart",[]);
-let settings=loadObject("kgp_settings",DEFAULT_SETTINGS), brand="الكل", currentScreenEdit=-1, currentBatteryEdit=-1, priceMode="retail";
+const COVER_DEFAULTS=[];
+const CHARGE_DEFAULTS=[];
+let data=loadArray("kgp_data",SCREEN_DEFAULTS), batteries=loadArray("kgp_batteries",BATTERY_DEFAULTS);
+let covers=loadArray("kgp_covers",COVER_DEFAULTS), charges=loadArray("kgp_charges",CHARGE_DEFAULTS), basket=loadArray("kgp_cart",[]);
+let settings=loadObject("kgp_settings",DEFAULT_SETTINGS), brand="الكل", currentScreenEdit=-1, currentBatteryEdit=-1, currentCoverEdit=-1, currentChargeEdit=-1, priceMode="retail";
 function ensureLatestCatalog(){
   const screenSeen=new Set(data.map(p=>String(p[0])+"|"+String(p[1]).toLowerCase()));
   NEW_SCREEN_DEFAULTS.forEach(p=>{const k=p[0]+"|"+p[1].toLowerCase();if(!screenSeen.has(k)){data.push(p);screenSeen.add(k)}});
@@ -217,7 +250,14 @@ ensureLatestCatalog();
 function clone(x){return JSON.parse(JSON.stringify(x))}
 function loadArray(key,fallback){try{const v=JSON.parse(localStorage.getItem(key));return Array.isArray(v)?v:clone(fallback)}catch(e){return clone(fallback)}}
 function loadObject(key,fallback){try{const v=JSON.parse(localStorage.getItem(key));return v&&typeof v==="object"?{...fallback,...v}:{...fallback}}catch(e){return {...fallback}}}
-function saveAll(){localStorage.setItem("kgp_data",JSON.stringify(data));localStorage.setItem("kgp_batteries",JSON.stringify(batteries));localStorage.setItem("kgp_cart",JSON.stringify(basket));localStorage.setItem("kgp_settings",JSON.stringify(settings))}
+function saveAll(){
+  localStorage.setItem("kgp_data",JSON.stringify(data));
+  localStorage.setItem("kgp_batteries",JSON.stringify(batteries));
+  localStorage.setItem("kgp_covers",JSON.stringify(covers));
+  localStorage.setItem("kgp_charges",JSON.stringify(charges));
+  localStorage.setItem("kgp_cart",JSON.stringify(basket));
+  localStorage.setItem("kgp_settings",JSON.stringify(settings))
+}
 function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
 function norm(v){return String(v??"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[أإآ]/g,"ا").replace(/ى/g,"ي").replace(/ة/g,"ه").replace(/[٠-٩]/g,d=>String("٠١٢٣٤٥٦٧٨٩".indexOf(d))).replace(/[^a-z0-9\u0600-\u06ff]+/g," ").trim()}
 function money(v){return Number(v||0).toLocaleString("fr-DZ")+" دج"}
@@ -230,7 +270,7 @@ function priceView(p){
 function askPrice(type,i){
   const p=type==="b"?batteries[i]:data[i];
   if(!p||!priceUnset(p))return;
-  const kind=type==="b"?"بطارية":"شاشة";
+  const kind=type==="b"?"بطارية":type==="c"?"كوفر":"ناب شارج";
   const msg=`السلام عليكم ${settings.name}، أريد معرفة سعر ${kind}:\nالماركة: ${p[0]}\nالموديل: ${p[1]}\nالنوع: ${p[2]}`;
   const phone=String(settings.whatsapp).replace(/\D/g,"");
   window.open("https://wa.me/"+phone+"?text="+encodeURIComponent(msg),"_blank");
@@ -246,35 +286,77 @@ function screenImage(p){
 }
 function batteryImage(p){return p[4]||"data:image/svg+xml;charset=UTF-8,"+encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='500' height='500'><rect x='145' y='80' width='210' height='340' rx='24' fill='#111827' stroke='#ffd21a' stroke-width='10'/><rect x='205' y='45' width='90' height='38' rx='10' fill='#334155'/><text x='250' y='245' fill='#ffd21a' font-size='70' text-anchor='middle'>+</text><text x='250' y='330' fill='#fff' font-family='Arial' font-size='28' text-anchor='middle'>BATTERY</text></svg>`)}
 
-function showCatalog(which){const screens=which==="screens";document.getElementById("screenSection").classList.toggle("show",screens);document.getElementById("batterySection").classList.toggle("show",!screens);document.getElementById("adminSection").classList.remove("show");document.getElementById("screenTab").classList.toggle("primary",screens);document.getElementById("batteryTab").classList.toggle("primary",!screens);document.getElementById("catalogTitle").innerHTML=(screens?'📱 الشاشات':'🔋 البطاريات')+' <span class="muted" id="screenCount"></span>'+ (priceMode==='wholesale'?' <button class="btn" onclick="exitWholesale()" style="margin-right:8px">🔓 خروج من الجملة</button>':'');if(screens)renderScreens();else renderBatteries();window.scrollTo({top:0,behavior:"smooth"})}
-
+function categoryTerms(kind){
+  if(kind==="screens")return ["شاشه","شاشات","screen","screens","lcd","oled","incell","display","ecran","écran"];
+  if(kind==="batteries")return ["بطاريه","بطاريات","battery","batteries","batterie"];
+  if(kind==="covers")return ["كوفر","كوفرات","كفر","كفرات","cover","covers","coque","coques","case","cases","housse","protection","حماية"];
+  return ["ناب","ناب شارج","شارج","شحن","nappe","charge","charging","flex","connecteur","usb"];
+}
+const SEARCH_ALIASES={
+  "كوفر":"coque cover case","كوفرات":"coque cover case","كفر":"coque cover case","كفرات":"coque cover case",
+  "coque":"coque cover case","coques":"coque cover case","cover":"coque cover case","covers":"coque cover case","case":"coque cover case","cases":"coque cover case","housse":"coque cover case",
+  "ناب":"nappe charge charging flex connecteur","شارج":"nappe charge charging flex connecteur","شحن":"nappe charge charging flex connecteur",
+  "nappe":"nappe charge charging flex connecteur","charge":"nappe charge charging flex connecteur","charging":"nappe charge charging flex connecteur","flex":"nappe charge charging flex connecteur","connecteur":"nappe charge charging flex connecteur"
+};
+function expandedSearch(q){return norm(q).split(" ").flatMap(t=>SEARCH_ALIASES[t]?norm(SEARCH_ALIASES[t]).split(" "):[t]).filter(Boolean)}
+function detectCategoryFromSearch(q){
+  const n=norm(q);
+  if(/\b(كوفر|كوفرات|كفر|كفرات|coque|coques|cover|covers|case|cases|housse|protection)\b/i.test(n))return "covers";
+  if(/\b(ناب|ناب شارج|شارج|شحن|nappe|charge|charging|flex|connecteur|usb)\b/i.test(n))return "charges";
+  return null
+}
+function setActiveTab(which){
+  ["screenTab","batteryTab","coverTab","chargeTab"].forEach(id=>document.getElementById(id)?.classList.remove("primary"));
+  const id={screens:"screenTab",batteries:"batteryTab",covers:"coverTab",charges:"chargeTab"}[which];
+  document.getElementById(id)?.classList.add("primary")
+}
+function showCatalog(which){
+  ["screenSection","batterySection","coverSection","chargeSection","adminSection"].forEach(id=>document.getElementById(id)?.classList.remove("show"));
+  const target={screens:"screenSection",batteries:"batterySection",covers:"coverSection",charges:"chargeSection"}[which]||"screenSection";
+  document.getElementById(target).classList.add("show");setActiveTab(which);
+  const titles={screens:"📱 الشاشات",batteries:"🔋 البطاريات",covers:"📱 الكوفرات",charges:"🔌 ناب شارج"};
+  document.getElementById("catalogTitle").innerHTML=titles[which]+' <span class="muted" id="screenCount"></span>'+ (priceMode==="wholesale"?' <button class="btn" onclick="exitWholesale()" style="margin-right:8px">🔓 خروج من الجملة</button>':'');
+  if(which==="screens")renderScreens();else if(which==="batteries")renderBatteries();else if(which==="covers")renderCovers();else renderCharges();
+  window.scrollTo({top:0,behavior:"smooth"})
+}
+function matchProduct(p,q,kind){
+  const text=norm(p.slice(0,4).join(" ")+" "+categoryTerms(kind).join(" "));
+  const tokens=expandedSearch(q);
+  return !tokens.length||tokens.every(t=>text.includes(t))
+}
 function renderScreens(){
-  const q=norm(document.getElementById("search").value);
-  const ignoredScreenTerms=new Set(["lcd","aff","screen","screens","شاشه","شاشات","شاشة"]);
-  const tokens=q.split(" ").filter(t=>t && !ignoredScreenTerms.has(t));
-  const out=document.getElementById("products");
-  const cards=[];
-  let shown=0;
-
+  const q=document.getElementById("search").value,tokens=expandedSearch(q),out=document.getElementById("products"),cards=[];let shown=0;
   data.forEach((p,i)=>{
     const text=norm(p.slice(0,3).join(" ")+" "+(brandAliases[p[0]]||""));
-    if((brand==="الكل"||p[0]===brand)&&(!tokens.length||tokens.every(t=>text.includes(t)))){
-      shown++;
-      cards.push(`<article class="card"><div class="picWrap"><span class="brandBadge">${esc(brandDisplay[p[0]]||p[0])}</span><img class="pic" loading="lazy" decoding="async" src="${esc(screenImage(p))}" alt="${esc(p[0]+" "+p[1])}"></div><div class="body"><div class="muted">${esc(brandDisplay[p[0]]||p[0])} • ${esc(p[2])}</div><div class="title">${esc(p[1])}</div><div class="muted">النوع: ${esc(p[2])}</div><div class="muted">${priceLabel()}</div>${priceView(p)}<div class="actions">${priceUnset(p)?`<button class="priceAsk" onclick="askPrice('s',${i})">💬 اسأل عن السعر</button>`:`<button class="btn primary" onclick="addCart('s',${i})">🛒 إضافة للسلة</button>`}</div></div></article>`);
+    const categoryTokens=categoryTerms("screens");
+    const filtered=tokens.filter(t=>!categoryTokens.includes(t));
+    if((brand==="الكل"||p[0]===brand)&&(!filtered.length||filtered.every(t=>text.includes(t)))){
+      shown++;cards.push(`<article class="card"><div class="picWrap"><span class="brandBadge">${esc(brandDisplay[p[0]]||p[0])}</span><img class="pic" loading="lazy" decoding="async" src="${esc(screenImage(p))}" alt="${esc(p[0]+" "+p[1])}"></div><div class="body"><div class="muted">${esc(brandDisplay[p[0]]||p[0])} • ${esc(p[2])}</div><div class="title">${esc(p[1])}</div><div class="muted">النوع: ${esc(p[2])}</div><div class="muted">${priceLabel()}</div>${priceView(p)}<div class="actions">${priceUnset(p)?`<button class="priceAsk" onclick="askPrice('s',${i})">💬 اسأل عن السعر</button>`:`<button class="btn primary" onclick="addCart('s',${i})">🛒 إضافة للسلة</button>`}</div></div></article>`)
     }
   });
-
-  out.innerHTML=cards.join("");
-  if(!shown)out.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:#aaa">🔎<h3 style="color:#fff">لا توجد نتائج</h3></div>';
-  const c=document.getElementById("screenCount");
-  if(c)c.textContent=`(${data.length} منتج)`;
-  if(document.getElementById("adminSection").classList.contains("show"))renderAdminTables();
-  updateCount();
+  out.innerHTML=cards.join("");if(!shown)out.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:#aaa">🔎<h3 style="color:#fff">لا توجد نتائج</h3><p>جرّب كتابة الموديل فقط مثل A15.</p></div>';
+  const c=document.getElementById("screenCount");if(c)c.textContent=`(${data.length} منتج)`;updateCount()
 }
-function renderBatteries(){const q=norm(document.getElementById("search").value),out=document.getElementById("batteryProducts");let shown=0;out.innerHTML="";batteries.forEach((p,i)=>{const text=norm(p.slice(0,3).join(" "));if(!q||q.split(" ").every(t=>text.includes(t))){shown++;out.innerHTML+=`<article class="card"><div class="picWrap"><img class="pic" loading="lazy" decoding="async" style="width:145px;height:170px" src="${esc(batteryImage(p))}" alt="بطارية"></div><div class="body"><div class="muted">${esc(p[0])}</div><div class="title">${esc(p[1])}</div><div class="muted">${priceLabel()}</div>${priceView(p)}<div class="actions">${priceUnset(p)?`<button class="priceAsk" onclick="askPrice('b',${i})">💬 اسأل عن السعر</button>`:`<button class="btn primary" onclick="addCart('b',${i})">🛒 إضافة للسلة</button>`}</div></div></article>`}});if(!shown)out.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:#aaa">لا توجد نتائج.</div>';document.getElementById("batteryCount").textContent=`(${batteries.length} بطارية)`;if(document.getElementById("adminSection").classList.contains("show"))renderAdminTables();updateCount()}
+function renderBatteries(){
+  const q=document.getElementById("search").value,out=document.getElementById("batteryProducts");let shown=0;out.innerHTML="";
+  batteries.forEach((p,i)=>{if(matchProduct(p,q,"batteries")){shown++;out.innerHTML+=`<article class="card"><div class="picWrap"><img class="pic" loading="lazy" decoding="async" style="width:145px;height:170px" src="${esc(batteryImage(p))}" alt="بطارية"></div><div class="body"><div class="muted">${esc(p[0])}</div><div class="title">${esc(p[1])}</div><div class="muted">${priceLabel()}</div>${priceView(p)}<div class="actions">${priceUnset(p)?`<button class="priceAsk" onclick="askPrice('b',${i})">💬 اسأل عن السعر</button>`:`<button class="btn primary" onclick="addCart('b',${i})">🛒 إضافة للسلة</button>`}</div></div></article>`}});
+  if(!shown)out.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:#aaa">🔎<h3 style="color:#fff">لا توجد نتائج</h3><p>جرّب موديل الهاتف أو رقم البطارية.</p></div>';
+  document.getElementById("batteryCount").textContent=`(${batteries.length} بطارية)`;updateCount()
+}
+function renderAccessoryList(list,outId,countId,kind,type,emptyText){
+  const q=document.getElementById("search").value,out=document.getElementById(outId);let shown=0;out.innerHTML="";
+  list.forEach((p,i)=>{if(matchProduct(p,q,kind)){shown++;out.innerHTML+=`<article class="card"><div class="picWrap"><span class="brandBadge">${esc(p[0])}</span><img class="pic" loading="lazy" decoding="async" src="${esc(p[4]||"")}" alt="${esc(p[0]+" "+p[1])}" onerror="this.style.display='none'"></div><div class="body"><div class="muted">${esc(p[0])} • ${esc(p[2]||"")}</div><div class="title">${esc(p[1])}</div><div class="muted">${priceLabel()}</div>${priceView(p)}<div class="actions">${priceUnset(p)?`<button class="priceAsk" onclick="askPrice('${type}',${i})">💬 اسأل عن السعر</button>`:`<button class="btn primary" onclick="addCart('${type}',${i})">🛒 إضافة للسلة</button>`}</div></div></article>`}});
+  if(!shown)out.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:40px;color:#aaa">${list.length?'<h3 style="color:#fff">🔎 لا توجد نتائج</h3><p>جرّب اسم الموديل أو رقم القطعة.</p>':emptyText}</div>`;
+  document.getElementById(countId).textContent=`(${list.length} منتج)`;updateCount()
+}
+function renderCovers(){renderAccessoryList(covers,"coverProducts","coverCount","covers","c","لا توجد كوفرات مضافة بعد. أضفها من لوحة الإدارة.")}
+function renderCharges(){renderAccessoryList(charges,"chargeProducts","chargeCount","charges","h","لا توجد نابات شارج مضافة بعد. أضفها من لوحة الإدارة.")}
 
 function addCart(type,i){const key=type+":"+i,x=basket.find(z=>z.k===key);if(x)x.q++;else basket.push({k:key,q:1});saveAll();updateCount();openCart()}
-function getProduct(x){const [type,idx]=String(x.k).split(":");return type==="b"?batteries[Number(idx)]:data[Number(idx)]}
+function getProduct(x){
+  const [type,idx]=String(x.k).split(":");const n=Number(idx);
+  if(type==="b")return batteries[n];if(type==="c")return covers[n];if(type==="h")return charges[n];return data[n]
+}
 function updateCount(){document.getElementById("cartCount").textContent=basket.reduce((s,x)=>s+x.q,0)}
 function openCart(){document.getElementById("cartModal").classList.add("show");renderCart()}function closeCart(){document.getElementById("cartModal").classList.remove("show")}
 function changeCart(k,d){const x=basket.find(z=>z.k===k);if(!x)return;x.q+=d;if(x.q<=0)basket=basket.filter(z=>z!==x);saveAll();updateCount();renderCart()}
@@ -316,8 +398,12 @@ function runSearch(){
 
   cancelAnimationFrame(searchFrame);
   searchFrame=requestAnimationFrame(()=>{
-    if(document.getElementById("batterySection").classList.contains("show")) renderBatteries();
-    else if(document.getElementById("screenSection").classList.contains("show")) renderScreens();
+    const detected=detectCategoryFromSearch(value);
+    if(detected)showCatalog(detected);
+    else if(document.getElementById("batterySection").classList.contains("show"))renderBatteries();
+    else if(document.getElementById("coverSection").classList.contains("show"))renderCovers();
+    else if(document.getElementById("chargeSection").classList.contains("show"))renderCharges();
+    else renderScreens();
   });
 }
 
@@ -326,7 +412,11 @@ searchInput.addEventListener("keydown",e=>{
   if(e.key==="Enter"){
     cancelAnimationFrame(searchFrame);
     lastSearchValue=searchInput.value;
-    if(document.getElementById("batterySection").classList.contains("show")) renderBatteries();
+    const detected=detectCategoryFromSearch(searchInput.value);
+    if(detected)showCatalog(detected);
+    else if(document.getElementById("batterySection").classList.contains("show"))renderBatteries();
+    else if(document.getElementById("coverSection").classList.contains("show"))renderCovers();
+    else if(document.getElementById("chargeSection").classList.contains("show"))renderCharges();
     else renderScreens();
   }
 });
@@ -343,12 +433,37 @@ function editBattery(i){const p=batteries[i];currentBatteryEdit=i;document.getEl
 function cancelBatteryEdit(){currentBatteryEdit=-1;["fbbrand","fbmodel","fbimage"].forEach(id=>document.getElementById(id).value="");document.getElementById("fbprice").value="0";document.getElementById("batterySaveBtn").textContent="+ إضافة بطارية"}
 function deleteBattery(i){if(confirm("حذف هذه البطارية؟")){batteries.splice(i,1);saveAll();renderBatteries()}}
 
-function saveSettings(){settings.name=f("sName")||DEFAULT_SETTINGS.name;settings.subtitle=f("sSubtitle")||DEFAULT_SETTINGS.subtitle;settings.whatsapp=f("sWhatsapp").replace(/\D/g,"")||DEFAULT_SETTINGS.whatsapp;settings.pin=f("sPin")||DEFAULT_SETTINGS.pin;settings.wholesalePin=f("sWholesalePin")||DEFAULT_SETTINGS.wholesalePin;saveAll();applySettings();alert("تم حفظ إعدادات المتجر.")}
-function renderAdminTables(){const sr=document.getElementById("screenRows");if(sr)sr.innerHTML=data.map((p,i)=>`<tr><td>${i+1}</td><td><img class="thumb" loading="lazy" decoding="async" src="${esc(screenImage(p))}" alt=""></td><td><b>${esc(p[0])}</b><br>${esc(p[1])}</td><td>${esc(p[2])}</td><td>${money(p[3])}</td><td><button class="btn" onclick="editScreen(${i})">تعديل</button> <button class="btn danger" onclick="deleteScreen(${i})">حذف</button></td></tr>`).join("");const br=document.getElementById("batteryRows");if(br)br.innerHTML=batteries.map((p,i)=>`<tr><td>${i+1}</td><td><b>${esc(p[0])}</b><br>${esc(p[1])}</td><td>${money(p[3])}</td><td><button class="btn" onclick="editBattery(${i})">تعديل</button> <button class="btn danger" onclick="deleteBattery(${i})">حذف</button></td></tr>`).join("")}
+function saveCoverProduct(){
+  const p=[f("fcbrand"),f("fcmodel"),f("fctype")||"Coque / Cover",Number(f("fcprice")),f("fcimage")||null];
+  if(!p[0]||!p[1]||Number.isNaN(p[3]))return alert("أدخل الماركة والموديل والسعر.");
+  const editing=currentCoverEdit>=0;if(editing)covers[currentCoverEdit]=p;else covers.push(p);
+  saveAll();cancelCoverEdit();renderCovers();renderAdminTables();alert(editing?"تم تعديل الكوفر.":"تمت إضافة الكوفر.")
+}
+function editCover(i){const p=covers[i];currentCoverEdit=i;document.getElementById("fcbrand").value=p[0]||"";document.getElementById("fcmodel").value=p[1]||"";document.getElementById("fctype").value=p[2]||"";document.getElementById("fcprice").value=p[3]||"";document.getElementById("fcimage").value=p[4]||"";document.getElementById("coverSaveBtn").textContent="💾 حفظ تعديل الكوفر"}
+function cancelCoverEdit(){currentCoverEdit=-1;["fcbrand","fcmodel","fctype","fcimage"].forEach(id=>document.getElementById(id).value="");document.getElementById("fcprice").value="0";document.getElementById("coverSaveBtn").textContent="+ إضافة كوفر"}
+function deleteCover(i){if(confirm("حذف هذا الكوفر؟")){covers.splice(i,1);saveAll();renderCovers();renderAdminTables()}}
 
-function exportBackup(){const payload={data,batteries,settings,createdAt:new Date().toISOString()};const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="KHIRO-TELECOM-backup.json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
-function importBackup(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const x=JSON.parse(reader.result);if(!Array.isArray(x.data)||!Array.isArray(x.batteries))throw new Error();data=x.data;batteries=x.batteries;settings={...DEFAULT_SETTINGS,...(x.settings||{})};saveAll();applySettings();brandsUI();renderScreens();renderBatteries();alert("تم استرجاع النسخة الاحتياطية.")}catch(err){alert("الملف غير صالح.")}};reader.readAsText(file);e.target.value=""}
-function resetAll(){if(!confirm("سيتم حذف تعديلاتك المحلية وإرجاع القوائم الأصلية + آخر تحديث. هل أنت متأكد؟"))return;data=clone(SCREEN_DEFAULTS).concat(clone(NEW_SCREEN_DEFAULTS));batteries=clone(BATTERY_DEFAULTS).concat(clone(NEW_BATTERY_DEFAULTS));settings={...DEFAULT_SETTINGS};basket=[];priceMode="retail";saveAll();applySettings();brandsUI();renderScreens();renderBatteries();alert("تم إرجاع البيانات الأصلية + آخر تحديث.")}
+function saveChargeProduct(){
+  const p=[f("fchbrand"),f("fchmodel"),f("fchtype")||"Nappe de charge",Number(f("fchprice")),f("fchimage")||null];
+  if(!p[0]||!p[1]||Number.isNaN(p[3]))return alert("أدخل الماركة والموديل أو رقم الناب والسعر.");
+  const editing=currentChargeEdit>=0;if(editing)charges[currentChargeEdit]=p;else charges.push(p);
+  saveAll();cancelChargeEdit();renderCharges();renderAdminTables();alert(editing?"تم تعديل ناب الشارج.":"تمت إضافة ناب الشارج.")
+}
+function editCharge(i){const p=charges[i];currentChargeEdit=i;document.getElementById("fchbrand").value=p[0]||"";document.getElementById("fchmodel").value=p[1]||"";document.getElementById("fchtype").value=p[2]||"";document.getElementById("fchprice").value=p[3]||"";document.getElementById("fchimage").value=p[4]||"";document.getElementById("chargeSaveBtn").textContent="💾 حفظ تعديل ناب الشارج"}
+function cancelChargeEdit(){currentChargeEdit=-1;["fchbrand","fchmodel","fchtype","fchimage"].forEach(id=>document.getElementById(id).value="");document.getElementById("fchprice").value="0";document.getElementById("chargeSaveBtn").textContent="+ إضافة ناب شارج"}
+function deleteCharge(i){if(confirm("حذف هذا ناب الشارج؟")){charges.splice(i,1);saveAll();renderCharges();renderAdminTables()}}
+
+function saveSettings(){settings.name=f("sName")||DEFAULT_SETTINGS.name;settings.subtitle=f("sSubtitle")||DEFAULT_SETTINGS.subtitle;settings.whatsapp=f("sWhatsapp").replace(/\D/g,"")||DEFAULT_SETTINGS.whatsapp;settings.pin=f("sPin")||DEFAULT_SETTINGS.pin;settings.wholesalePin=f("sWholesalePin")||DEFAULT_SETTINGS.wholesalePin;saveAll();applySettings();alert("تم حفظ إعدادات المتجر.")}
+function renderAdminTables(){
+  const sr=document.getElementById("screenRows");if(sr)sr.innerHTML=data.map((p,i)=>`<tr><td>${i+1}</td><td><img class="thumb" loading="lazy" decoding="async" src="${esc(screenImage(p))}" alt=""></td><td><b>${esc(p[0])}</b><br>${esc(p[1])}</td><td>${esc(p[2])}</td><td>${money(p[3])}</td><td><button class="btn" onclick="editScreen(${i})">تعديل</button> <button class="btn danger" onclick="deleteScreen(${i})">حذف</button></td></tr>`).join("");
+  const br=document.getElementById("batteryRows");if(br)br.innerHTML=batteries.map((p,i)=>`<tr><td>${i+1}</td><td><b>${esc(p[0])}</b><br>${esc(p[1])}</td><td>${money(p[3])}</td><td><button class="btn" onclick="editBattery(${i})">تعديل</button> <button class="btn danger" onclick="deleteBattery(${i})">حذف</button></td></tr>`).join("");
+  const cr=document.getElementById("coverRows");if(cr)cr.innerHTML=covers.map((p,i)=>`<tr><td>${i+1}</td><td><b>${esc(p[0])}</b><br>${esc(p[1])}</td><td>${esc(p[2])}</td><td>${money(p[3])}</td><td><button class="btn" onclick="editCover(${i})">تعديل</button> <button class="btn danger" onclick="deleteCover(${i})">حذف</button></td></tr>`).join("");
+  const chr=document.getElementById("chargeRows");if(chr)chr.innerHTML=charges.map((p,i)=>`<tr><td>${i+1}</td><td><b>${esc(p[0])}</b><br>${esc(p[1])}</td><td>${esc(p[2])}</td><td>${money(p[3])}</td><td><button class="btn" onclick="editCharge(${i})">تعديل</button> <button class="btn danger" onclick="deleteCharge(${i})">حذف</button></td></tr>`).join("")
+}
+
+function exportBackup(){const payload={data,batteries,covers,charges,settings,createdAt:new Date().toISOString()};const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="KHIRO-TELECOM-backup.json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function importBackup(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const x=JSON.parse(reader.result);if(!Array.isArray(x.data)||!Array.isArray(x.batteries))throw new Error();data=x.data;batteries=x.batteries;covers=Array.isArray(x.covers)?x.covers:[];charges=Array.isArray(x.charges)?x.charges:[];settings={...DEFAULT_SETTINGS,...(x.settings||{})};saveAll();applySettings();brandsUI();renderScreens();renderBatteries();alert("تم استرجاع النسخة الاحتياطية.")}catch(err){alert("الملف غير صالح.")}};reader.readAsText(file);e.target.value=""}
+function resetAll(){if(!confirm("سيتم حذف تعديلاتك المحلية وإرجاع القوائم الأصلية + آخر تحديث. هل أنت متأكد؟"))return;data=clone(SCREEN_DEFAULTS).concat(clone(NEW_SCREEN_DEFAULTS));batteries=clone(BATTERY_DEFAULTS).concat(clone(NEW_BATTERY_DEFAULTS));covers=clone(COVER_DEFAULTS);charges=clone(CHARGE_DEFAULTS);settings={...DEFAULT_SETTINGS};basket=[];priceMode="retail";saveAll();applySettings();brandsUI();renderScreens();renderBatteries();alert("تم إرجاع البيانات الأصلية + آخر تحديث.")}
 
 applySettings();brandsUI();renderScreens();renderBatteries();
 </script>
