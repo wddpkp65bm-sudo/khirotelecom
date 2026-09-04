@@ -67,6 +67,9 @@ td,th{padding:9px;border-bottom:1px solid #24466f;text-align:right;vertical-alig
 .siteHeader{position:relative;background:#06101d;border-bottom:1px solid #163454}.headWrap{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:18px;padding-top:18px;padding-bottom:10px}.headActions{display:flex;gap:8px;justify-content:flex-start}.countPill{display:inline-flex;min-width:20px;height:20px;align-items:center;justify-content:center;border-radius:50%;background:var(--yellow);color:#07111f;font-size:11px;margin-right:3px}.brandLogo{text-align:center;direction:ltr;line-height:.8;position:relative}.brandMain{font-size:clamp(42px,7vw,72px);font-weight:1000;letter-spacing:-4px;color:#f8fbff;text-shadow:1px 2px 0 #000}.brandMain span{color:#f4d000}.brandTelecom{display:inline-block;margin-top:6px;padding:5px 16px;border:2px solid #f4d000;border-radius:7px;font-size:clamp(13px,2vw,21px);font-weight:1000;letter-spacing:2px;color:#fff}.brandKgp{color:var(--yellow);font-size:22px;font-weight:1000;margin-top:7px;letter-spacing:2px}.headTitle{text-align:right;font-size:20px}.headTitle b span{color:var(--yellow)}.headTitle small{display:block;color:var(--muted);font-size:13px;margin-top:8px}.navWrap{padding-top:4px;padding-bottom:16px}.navWrap #search{margin-top:0;height:54px;border-radius:10px;background:#081729;border-color:#294768;font-size:15px}.navWrap nav{padding-top:14px}.chip{border-radius:10px;background:#071525;padding:10px 16px}.catalogToolbar{display:flex;justify-content:space-between;gap:12px;align-items:center;border-top:1px solid #152d49;border-bottom:1px solid #152d49;padding:18px 0;margin-top:4px}.toolbarSide{display:flex;gap:9px;flex-wrap:wrap}.catalogHeading{display:flex;justify-content:flex-start;align-items:center;margin:24px 0 16px}.catalogHeading h2{margin:0;font-size:28px}.sectionIcon{color:var(--blue)}.featuresGrid{max-width:1150px;margin:24px auto 10px;padding:0 16px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px}.feature{background:#09182b;border:1px solid #29476c;border-radius:12px;padding:22px;text-align:center;min-height:105px}.feature b{display:block;color:var(--yellow);font-size:18px;margin-bottom:8px}.feature span{display:block;color:#b6c5d7;font-size:13px;line-height:1.6}.adminQuick{max-width:1150px;margin:18px auto;padding:0 16px 20px;border-bottom:1px solid #142a43}.adminCards{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}.adminCard{min-height:160px;border:1px solid #29476c;border-radius:12px;background:#09182b;color:var(--text);padding:20px 12px;cursor:pointer;font:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}.adminCard:first-line{font-size:30px}.adminCard b{font-size:16px}.adminCard span{font-size:12px;color:#aabbd0;line-height:1.5}.adminCard:hover{border-color:var(--blue)}
 @media(max-width:760px){.headWrap{grid-template-columns:1fr auto;grid-template-areas:"logo actions" "title title"}.brandLogo{grid-area:logo;text-align:right}.headActions{grid-area:actions;justify-content:flex-start}.headTitle{grid-area:title;text-align:right}.catalogToolbar{align-items:stretch;flex-direction:column}.toolbarSide{justify-content:space-between}.featuresGrid{grid-template-columns:1fr;gap:10px}.adminCards{grid-template-columns:repeat(2,1fr);gap:10px}.adminCard{min-height:125px}.catalogHeading h2{font-size:23px}}
 @media(max-width:420px){.brandMain{font-size:39px}.brandTelecom{font-size:11px;padding:4px 10px}.brandKgp{font-size:16px}.headTitle{font-size:16px}.headTitle small{font-size:11px}.headActions .btn{padding:8px 9px}.toolbarSide .btn{flex:1}.featuresGrid{padding:0 10px}.adminQuick{padding:0 10px 14px}.adminCards{grid-template-columns:repeat(2,1fr)}}
+
+.settingBox{background:#09182b;border:1px solid #29476c;border-radius:12px;padding:16px;margin-top:12px}
+.settingBox b{display:block;font-size:17px;color:var(--yellow)}
 .searchHelp{font-size:11px;color:#8fa0b5;margin-top:6px;text-align:center;line-height:1.5}.catalogToolbar .toolbarSide{flex-wrap:wrap}.catalogToolbar .toolbarSide .btn{min-width:105px}@media(max-width:600px){.catalogToolbar .toolbarSide{width:100%}.catalogToolbar .toolbarSide .btn{flex:1 1 45%;min-width:0}.searchHelp{font-size:10px}}</style>
 </head>
 <body>
@@ -75,6 +78,7 @@ td,th{padding:9px;border-bottom:1px solid #24466f;text-align:right;vertical-alig
   <div class="headActions">
     <button class="btn" onclick="openCart()">🛒 السلة <span id="cartCount" class="countPill">0</span></button>
     <button class="btn" onclick="shareApp()">🔗 مشاركة</button>
+    <button class="btn" onclick="openCustomerSettings()">⚙️ الإعدادات</button>
   </div>
   <div class="brandLogo" aria-label="KHIRO TELECOM KGP">
     <div class="brandMain">KH<span>I</span>RO</div><div class="brandTelecom">TELECOM</div><div class="brandKgp">KGP</div>
@@ -202,6 +206,30 @@ td,th{padding:9px;border-bottom:1px solid #24466f;text-align:right;vertical-alig
 <textarea id="thanksText" placeholder="اكتب كلمة الشكر أو التقييم *"></textarea>
 <a id="thanksSend" class="wa" target="_blank">💙 إرسال كلمة الشكر عبر WhatsApp</a>
 </div></div>
+
+
+<div id="customerSettingsModal" class="modal" onclick="if(event.target===this)closeCustomerSettings()">
+  <div class="sheet" style="max-width:480px">
+    <div class="top">
+      <h2 id="customerSettingsTitle">⚙️ إعدادات الزبون</h2>
+      <button class="btn" onclick="closeCustomerSettings()">إغلاق</button>
+    </div>
+
+    <div class="settingBox">
+      <b id="languageTitle">🌐 اللغة</b>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+        <button class="btn primary" id="langArBtn" onclick="setCustomerLanguage('ar')">🇩🇿 العربية</button>
+        <button class="btn" id="langFrBtn" onclick="setCustomerLanguage('fr')">🇫🇷 Français</button>
+      </div>
+      <div class="hint" id="languageHint">اختر اللغة التي تريد استعمالها داخل التطبيق. سيتم حفظ اختيارك تلقائياً.</div>
+    </div>
+
+    <div class="settingBox">
+      <b id="settingsAboutTitle">ℹ️ ملاحظة</b>
+      <div class="hint" id="settingsAboutText">هذه الإعدادات خاصة بالزبون ولا تغيّر أسعار أو بيانات المتجر.</div>
+    </div>
+  </div>
+</div>
 
 <div id="cartModal" class="modal" onclick="if(event.target===this)closeCart()"><div class="sheet">
 <div class="top"><h2>🛒 سلة الطلب</h2><button class="btn" onclick="closeCart()">إغلاق</button></div>
@@ -375,6 +403,93 @@ function closeThanks(){document.getElementById("thanksModal").classList.remove("
 function updateThanksLink(){const n=document.getElementById("thanksName").value.trim(),t=document.getElementById("thanksText").value.trim();const msg=`السلام عليكم ${settings.name}، كلمة شكر من زبون:\nالاسم: ${n||"بدون اسم"}\nالرسالة: ${t}`;document.getElementById("thanksSend").href="https://wa.me/"+String(settings.whatsapp).replace(/\D/g,"")+"?text="+encodeURIComponent(msg)}
 ["thanksName","thanksText"].forEach(id=>document.getElementById(id).addEventListener("input",updateThanksLink));
 document.getElementById("thanksSend").addEventListener("click",e=>{if(!document.getElementById("thanksText").value.trim()){e.preventDefault();alert("اكتب كلمة الشكر أولاً.");}});
+
+const CUSTOMER_LANG_KEY="kgp_customer_language";
+const CUSTOMER_TRANSLATIONS={
+  ar:{
+    settingsTitle:"⚙️ إعدادات الزبون", close:"إغلاق", languageTitle:"🌐 اللغة",
+    languageHint:"اختر اللغة التي تريد استعمالها داخل التطبيق. سيتم حفظ اختيارك تلقائياً.",
+    aboutTitle:"ℹ️ ملاحظة", aboutText:"هذه الإعدادات خاصة بالزبون ولا تغيّر أسعار أو بيانات المتجر.",
+    cart:"🛒 السلة", share:"🔗 مشاركة", settings:"⚙️ الإعدادات",
+    searchPlaceholder:"🔎 ابحث بالماركة أو الموديل… مثال: A15 / Samsung / coque / nappe charge",
+    searchHelp:"💡 كوفر = coque = cover = case • ناب شارج = nappe charge = charging flex • يمكنك كتابة الموديل فقط.",
+    screens:"🖥️ الشاشات", batteries:"🔋 البطاريات", covers:"📱 الكوفرات", charges:"🔌 ناب شارج",
+    wholesale:"👥 سعر الجملة", complaints:"💬 شكاوى", thanks:"♡ شكر المحل",
+    catalogScreens:"الشاشات 🖥️", returnScreens:"📱 العودة للشاشات",
+    catalogBatteries:"🔋 كتالوج البطاريات", catalogCovers:"📱 كتالوج الكوفرات", catalogCharges:"🔌 كتالوج ناب شارج"
+  },
+  fr:{
+    settingsTitle:"⚙️ Paramètres client", close:"Fermer", languageTitle:"🌐 Langue",
+    languageHint:"Choisissez la langue de l'application. Votre choix sera enregistré automatiquement.",
+    aboutTitle:"ℹ️ Remarque", aboutText:"Ces réglages sont propres au client et ne modifient ni les prix ni les données du magasin.",
+    cart:"🛒 Panier", share:"🔗 Partager", settings:"⚙️ Paramètres",
+    searchPlaceholder:"🔎 Rechercher par marque ou modèle… ex. A15 / Samsung / coque / nappe charge",
+    searchHelp:"💡 Coque = cover = case • Nappe de charge = charging flex • Vous pouvez écrire uniquement le modèle.",
+    screens:"🖥️ Écrans", batteries:"🔋 Batteries", covers:"📱 Coques", charges:"🔌 Nappe de charge",
+    wholesale:"👥 Prix de gros", complaints:"💬 Réclamations", thanks:"♡ Remercier le magasin",
+    catalogScreens:"Écrans 🖥️", returnScreens:"📱 Retour aux écrans",
+    catalogBatteries:"🔋 Catalogue batteries", catalogCovers:"📱 Catalogue coques", catalogCharges:"🔌 Catalogue nappe de charge"
+  }
+};
+
+function getCustomerLanguage(){
+  return localStorage.getItem(CUSTOMER_LANG_KEY)==="fr" ? "fr" : "ar";
+}
+function openCustomerSettings(){
+  const m=document.getElementById("customerSettingsModal");
+  if(m)m.classList.add("show");
+  applyCustomerLanguage();
+}
+function closeCustomerSettings(){
+  const m=document.getElementById("customerSettingsModal");
+  if(m)m.classList.remove("show");
+}
+function setCustomerLanguage(lang){
+  localStorage.setItem(CUSTOMER_LANG_KEY,lang==="fr"?"fr":"ar");
+  applyCustomerLanguage();
+}
+function setText(id,text){
+  const el=document.getElementById(id);
+  if(el)el.textContent=text;
+}
+function applyCustomerLanguage(){
+  const lang=getCustomerLanguage(), t=CUSTOMER_TRANSLATIONS[lang];
+  document.documentElement.lang=lang;
+  document.documentElement.dir=lang==="ar"?"rtl":"ltr";
+
+  setText("customerSettingsTitle",t.settingsTitle);
+  setText("languageTitle",t.languageTitle);
+  setText("languageHint",t.languageHint);
+  setText("settingsAboutTitle",t.aboutTitle);
+  setText("settingsAboutText",t.aboutText);
+
+  const search=document.getElementById("search");
+  if(search)search.placeholder=t.searchPlaceholder;
+  const help=document.querySelector(".searchHelp");
+  if(help)help.textContent=t.searchHelp;
+
+  const actions=document.querySelectorAll(".headActions .btn");
+  if(actions[0])actions[0].innerHTML=t.cart+' <span id="cartCount" class="countPill">0</span>';
+  if(actions[1])actions[1].textContent=t.share;
+  if(actions[2])actions[2].textContent=t.settings;
+
+  const toolbar=document.querySelectorAll(".catalogToolbar .toolbarSide .btn");
+  if(toolbar[0])toolbar[0].textContent=t.screens;
+  if(toolbar[1])toolbar[1].textContent=t.batteries;
+  if(toolbar[2])toolbar[2].textContent=t.covers;
+  if(toolbar[3])toolbar[3].textContent=t.charges;
+  if(toolbar[4])toolbar[4].textContent=t.wholesale;
+  if(toolbar[5])toolbar[5].textContent=t.complaints;
+  if(toolbar[6])toolbar[6].textContent=t.thanks;
+
+  setText("langArBtn","🇩🇿 العربية");
+  setText("langFrBtn","🇫🇷 Français");
+
+  const ar=document.getElementById("langArBtn"), fr=document.getElementById("langFrBtn");
+  if(ar)ar.classList.toggle("primary",lang==="ar");
+  if(fr)fr.classList.toggle("primary",lang==="fr");
+}
+
 async function shareApp(){try{if(navigator.share)await navigator.share({title:settings.name,text:"كتالوج KHIRO TELECOM - الشاشات والبطاريات",url:location.href});else{await navigator.clipboard.writeText(location.href);alert("تم نسخ رابط التطبيق.");}}catch(e){}}
 
 function openWholesale(){document.getElementById("wholesalePinInput").value="";document.getElementById("wholesalePinModal").classList.add("show");setTimeout(()=>document.getElementById("wholesalePinInput").focus(),100)}
