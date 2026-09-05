@@ -87,17 +87,99 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;background-ima
 .modal{background:rgba(1,5,10,.78);backdrop-filter:blur(9px)}.sheet{background:linear-gradient(160deg,#0c1b2e,#07111e);border-color:rgba(102,160,255,.25);box-shadow:0 -20px 80px rgba(0,0,0,.4)}
 .wa{background:linear-gradient(135deg,#24d366,#159447);box-shadow:0 10px 25px rgba(37,211,102,.18)}footer{border-top:1px solid rgba(116,160,214,.1);margin-top:30px}
 .productTools{display:flex;gap:7px;margin-top:9px}.productTools .btn{flex:1;min-height:38px;padding:7px 8px;font-size:11px}.favOn{border-color:#ff5d78!important;color:#ff7188!important;background:rgba(255,77,103,.08)!important}.compareOn{border-color:#66a0ff!important;background:rgba(47,125,255,.12)!important}
-#compareFab,#favoritesFab,#installFab{position:fixed;z-index:45;bottom:18px;border:1px solid rgba(102,160,255,.4);background:rgba(8,20,35,.9);color:#fff;border-radius:999px;padding:11px 15px;font-weight:900;box-shadow:0 12px 30px rgba(0,0,0,.35);backdrop-filter:blur(12px);cursor:pointer}#compareFab{left:18px}#favoritesFab{left:142px}#installFab{right:18px;background:linear-gradient(135deg,#2f7dff,#1558c7);display:none}
-@media(max-width:760px){.catalogToolbar{top:83px}.headWrap{padding-top:8px}.catalogToolbar .toolbarSide{gap:7px}.catalogToolbar .btn{min-height:40px}.productTools .btn{font-size:10px;padding:6px 4px}#favoritesFab{left:18px;bottom:67px}#compareFab{left:18px;bottom:18px}#installFab{right:18px;bottom:116px}}
+#favoritesFab,#installFab{position:fixed;z-index:45;bottom:18px;border:1px solid rgba(102,160,255,.4);background:rgba(8,20,35,.9);color:#fff;border-radius:999px;padding:11px 15px;font-weight:900;box-shadow:0 12px 30px rgba(0,0,0,.35);backdrop-filter:blur(12px);cursor:pointer}#favoritesFab{left:18px}#installFab{right:18px;background:linear-gradient(135deg,#2f7dff,#1558c7);display:none}
+@media(max-width:760px){.catalogToolbar{top:83px}.headWrap{padding-top:8px}.catalogToolbar .toolbarSide{gap:7px}.catalogToolbar .btn{min-height:40px}.productTools .btn{font-size:10px;padding:6px 4px}#favoritesFab{left:18px;bottom:18px}#installFab{right:18px;bottom:116px}}
 </style>
-\n<style>\n/* KHIRO TELECOM — Modern 2026 UI */\n:root{--blue:#3b82f6;--blue2:#60a5fa;--yellow:#ffd43b;--bg:#050914;--panel:#0b1220;--line:rgba(148,163,184,.16);--muted:#94a3b8}\n*{box-sizing:border-box}html{scroll-behavior:smooth}body{background:radial-gradient(900px 420px at 50% -120px,rgba(59,130,246,.20),transparent 65%),linear-gradient(180deg,#050914 0%,#07101c 48%,#050914 100%);color:#eef5ff;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}\nbody:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(to bottom,black,transparent 70%);z-index:-1}\n.siteHeader{border-bottom:1px solid rgba(148,163,184,.14);background:rgba(5,9,20,.72);backdrop-filter:blur(24px) saturate(160%);box-shadow:0 18px 55px rgba(0,0,0,.25)}\n.brandLogo{cursor:pointer;user-select:none;transition:transform .25s ease,filter .25s ease}.brandLogo:hover{transform:translateY(-2px);filter:drop-shadow(0 10px 24px rgba(59,130,246,.18))}.brandMain{text-shadow:0 0 28px rgba(96,165,250,.12)}\n.navWrap #search{height:58px;border-radius:18px;background:rgba(9,18,32,.78);border:1px solid rgba(148,163,184,.18);box-shadow:inset 0 1px rgba(255,255,255,.03),0 12px 35px rgba(0,0,0,.16);outline:none;transition:.2s}.navWrap #search:focus{border-color:rgba(96,165,250,.7);box-shadow:0 0 0 4px rgba(59,130,246,.10),0 14px 40px rgba(0,0,0,.2)}\nnav .chip{border-radius:999px;padding:9px 14px;background:rgba(15,27,46,.75);border-color:rgba(148,163,184,.15);transition:.18s}.chip:hover,.chip.active{transform:translateY(-1px);border-color:rgba(96,165,250,.55);background:rgba(37,99,235,.16)}\n.catalogToolbar{border:1px solid rgba(148,163,184,.14);border-radius:22px;background:rgba(8,16,29,.72);box-shadow:0 18px 50px rgba(0,0,0,.18),inset 0 1px rgba(255,255,255,.025);padding:11px;gap:10px}.catalogToolbar .btn{border-radius:14px;min-height:44px}.catalogToolbar .btn.primary{box-shadow:0 8px 24px rgba(37,99,235,.24)}\n.btn{border:1px solid rgba(148,163,184,.16);background:rgba(15,28,46,.78);border-radius:14px;box-shadow:0 7px 22px rgba(0,0,0,.13);transition:transform .18s ease,border-color .18s ease,background .18s ease,box-shadow .18s ease}.btn:active{transform:scale(.97)}\n.card{border:1px solid rgba(148,163,184,.14);border-radius:22px;background:linear-gradient(180deg,rgba(13,25,43,.92),rgba(7,15,27,.94));box-shadow:0 16px 45px rgba(0,0,0,.18);overflow:hidden;transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}.card:hover{transform:translateY(-5px);border-color:rgba(96,165,250,.38);box-shadow:0 22px 55px rgba(0,0,0,.27)}.picWrap{background:radial-gradient(circle at 50% 30%,rgba(59,130,246,.10),transparent 62%);border-bottom:1px solid rgba(148,163,184,.08)}.body{padding:16px}.title{font-weight:900;letter-spacing:-.2px}.price{font-weight:950}.productTools{margin-top:12px}.productTools .btn{border-radius:11px}\n.featuresGrid{margin-top:34px}.feature{border-radius:20px;background:rgba(10,20,35,.72);border-color:rgba(148,163,184,.13);box-shadow:0 14px 40px rgba(0,0,0,.16);transition:.2s}.feature:hover{transform:translateY(-3px);border-color:rgba(96,165,250,.3)}\n.adminSection .panel{border-radius:24px;background:linear-gradient(180deg,rgba(10,20,34,.96),rgba(5,12,22,.97));border:1px solid rgba(96,165,250,.20);box-shadow:0 25px 80px rgba(0,0,0,.35)}.adminSection h3{font-size:19px;letter-spacing:-.2px}.adminSection .form input,.adminSection .form textarea,.adminSection input,.adminSection textarea{border-radius:14px!important;border-color:rgba(148,163,184,.16)!important;background:rgba(3,9,18,.7)!important}.adminPrivateNote{border-color:rgba(96,165,250,.25)!important;background:rgba(37,99,235,.08)!important}\n.tableWrap{border:1px solid rgba(148,163,184,.10);border-radius:18px;padding:8px;background:rgba(2,8,16,.38);overflow:auto}table{min-width:700px}tbody tr{box-shadow:0 4px 16px rgba(0,0,0,.10)}\n.modal{background:rgba(1,5,12,.72)!important;backdrop-filter:blur(12px)}.sheet{border:1px solid rgba(148,163,184,.18)!important;border-radius:24px!important;background:linear-gradient(180deg,rgba(12,23,39,.98),rgba(6,13,24,.98))!important;box-shadow:0 30px 100px rgba(0,0,0,.48)!important}\n#favoritesFab,#compareFab,#installFab{border:1px solid rgba(148,163,184,.18);background:rgba(9,19,33,.90);backdrop-filter:blur(16px);box-shadow:0 12px 35px rgba(0,0,0,.28);border-radius:999px;padding:11px 15px;font-weight:900;transition:.18s}#favoritesFab:hover,#compareFab:hover,#installFab:hover{transform:translateY(-2px);border-color:rgba(96,165,250,.5)}\nfooter{margin-top:40px;padding:28px 16px!important;border-top:1px solid rgba(148,163,184,.10)!important;background:rgba(3,8,15,.35)}\n@media(max-width:600px){.catalogToolbar{border-radius:18px}.card{border-radius:18px}.picWrap{height:190px}.body{padding:13px}.productTools .btn{min-height:36px}.sheet{margin:10px!important;border-radius:20px!important}}\n</style>\n</head>
+\n<style>\n/* KHIRO TELECOM — Modern 2026 UI */\n:root{--blue:#3b82f6;--blue2:#60a5fa;--yellow:#ffd43b;--bg:#050914;--panel:#0b1220;--line:rgba(148,163,184,.16);--muted:#94a3b8}\n*{box-sizing:border-box}html{scroll-behavior:smooth}body{background:radial-gradient(900px 420px at 50% -120px,rgba(59,130,246,.20),transparent 65%),linear-gradient(180deg,#050914 0%,#07101c 48%,#050914 100%);color:#eef5ff;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}\nbody:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(to bottom,black,transparent 70%);z-index:-1}\n.siteHeader{border-bottom:1px solid rgba(148,163,184,.14);background:rgba(5,9,20,.72);backdrop-filter:blur(24px) saturate(160%);box-shadow:0 18px 55px rgba(0,0,0,.25)}\n.brandLogo{cursor:pointer;user-select:none;transition:transform .25s ease,filter .25s ease}.brandLogo:hover{transform:translateY(-2px);filter:drop-shadow(0 10px 24px rgba(59,130,246,.18))}.brandMain{text-shadow:0 0 28px rgba(96,165,250,.12)}\n.navWrap #search{height:58px;border-radius:18px;background:rgba(9,18,32,.78);border:1px solid rgba(148,163,184,.18);box-shadow:inset 0 1px rgba(255,255,255,.03),0 12px 35px rgba(0,0,0,.16);outline:none;transition:.2s}.navWrap #search:focus{border-color:rgba(96,165,250,.7);box-shadow:0 0 0 4px rgba(59,130,246,.10),0 14px 40px rgba(0,0,0,.2)}\nnav .chip{border-radius:999px;padding:9px 14px;background:rgba(15,27,46,.75);border-color:rgba(148,163,184,.15);transition:.18s}.chip:hover,.chip.active{transform:translateY(-1px);border-color:rgba(96,165,250,.55);background:rgba(37,99,235,.16)}\n.catalogToolbar{border:1px solid rgba(148,163,184,.14);border-radius:22px;background:rgba(8,16,29,.72);box-shadow:0 18px 50px rgba(0,0,0,.18),inset 0 1px rgba(255,255,255,.025);padding:11px;gap:10px}.catalogToolbar .btn{border-radius:14px;min-height:44px}.catalogToolbar .btn.primary{box-shadow:0 8px 24px rgba(37,99,235,.24)}\n.btn{border:1px solid rgba(148,163,184,.16);background:rgba(15,28,46,.78);border-radius:14px;box-shadow:0 7px 22px rgba(0,0,0,.13);transition:transform .18s ease,border-color .18s ease,background .18s ease,box-shadow .18s ease}.btn:active{transform:scale(.97)}\n.card{border:1px solid rgba(148,163,184,.14);border-radius:22px;background:linear-gradient(180deg,rgba(13,25,43,.92),rgba(7,15,27,.94));box-shadow:0 16px 45px rgba(0,0,0,.18);overflow:hidden;transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}.card:hover{transform:translateY(-5px);border-color:rgba(96,165,250,.38);box-shadow:0 22px 55px rgba(0,0,0,.27)}.picWrap{background:radial-gradient(circle at 50% 30%,rgba(59,130,246,.10),transparent 62%);border-bottom:1px solid rgba(148,163,184,.08)}.body{padding:16px}.title{font-weight:900;letter-spacing:-.2px}.price{font-weight:950}.productTools{margin-top:12px}.productTools .btn{border-radius:11px}\n.featuresGrid{margin-top:34px}.feature{border-radius:20px;background:rgba(10,20,35,.72);border-color:rgba(148,163,184,.13);box-shadow:0 14px 40px rgba(0,0,0,.16);transition:.2s}.feature:hover{transform:translateY(-3px);border-color:rgba(96,165,250,.3)}\n.adminSection .panel{border-radius:24px;background:linear-gradient(180deg,rgba(10,20,34,.96),rgba(5,12,22,.97));border:1px solid rgba(96,165,250,.20);box-shadow:0 25px 80px rgba(0,0,0,.35)}.adminSection h3{font-size:19px;letter-spacing:-.2px}.adminSection .form input,.adminSection .form textarea,.adminSection input,.adminSection textarea{border-radius:14px!important;border-color:rgba(148,163,184,.16)!important;background:rgba(3,9,18,.7)!important}.adminPrivateNote{border-color:rgba(96,165,250,.25)!important;background:rgba(37,99,235,.08)!important}\n.tableWrap{border:1px solid rgba(148,163,184,.10);border-radius:18px;padding:8px;background:rgba(2,8,16,.38);overflow:auto}table{min-width:700px}tbody tr{box-shadow:0 4px 16px rgba(0,0,0,.10)}\n.modal{background:rgba(1,5,12,.72)!important;backdrop-filter:blur(12px)}.sheet{border:1px solid rgba(148,163,184,.18)!important;border-radius:24px!important;background:linear-gradient(180deg,rgba(12,23,39,.98),rgba(6,13,24,.98))!important;box-shadow:0 30px 100px rgba(0,0,0,.48)!important}\n#favoritesFab,#installFab{border:1px solid rgba(148,163,184,.18);background:rgba(9,19,33,.90);backdrop-filter:blur(16px);box-shadow:0 12px 35px rgba(0,0,0,.28);border-radius:999px;padding:11px 15px;font-weight:900;transition:.18s}#favoritesFab:hover,#installFab:hover{transform:translateY(-2px);border-color:rgba(96,165,250,.5)}\nfooter{margin-top:40px;padding:28px 16px!important;border-top:1px solid rgba(148,163,184,.10)!important;background:rgba(3,8,15,.35)}\n@media(max-width:600px){.catalogToolbar{border-radius:18px}.card{border-radius:18px}.picWrap{height:190px}.body{padding:13px}.productTools .btn{min-height:36px}.sheet{margin:10px!important;border-radius:20px!important}}\n</style>\n
+<style>
+/* 2026 compact mobile header + touch-first controls */
+.headActions{align-items:center;gap:8px}
+.headerIconBtn{width:46px;height:46px;min-width:46px;padding:0!important;border-radius:15px!important;display:inline-flex;align-items:center;justify-content:center;font-size:19px;line-height:1;position:relative}
+.headerIconBtn .countPill{position:absolute;top:-5px;right:-4px;margin:0;min-width:19px;height:19px;font-size:10px;border:2px solid #06101d}
+.settingsHeaderBtn{background:rgba(37,99,235,.16);border-color:rgba(96,165,250,.30)}
+.compactAction{min-width:0!important;padding:9px 12px!important;border-radius:12px!important;font-size:12px!important;white-space:nowrap}
+.catalogToolbar{gap:8px}
+.catalogToolbar .toolbarSide:last-child{justify-content:flex-end}
+@media(max-width:760px){
+  .headWrap{grid-template-columns:auto 1fr;grid-template-areas:"logo actions" "title title";gap:10px;padding:8px 10px 10px}
+  .brandLogo{justify-self:start}
+  .headActions{justify-self:end;gap:6px}
+  .headerIconBtn{width:42px;height:42px;min-width:42px;border-radius:13px!important;font-size:17px}
+  .headTitle{margin-top:2px}
+  .navWrap{padding:4px 10px 12px}
+  .navWrap #search{height:50px;border-radius:16px}
+  .catalogToolbar{margin:8px 10px 0;padding:8px;border-radius:17px}
+  .catalogToolbar .toolbarSide{gap:6px}
+  .catalogToolbar .toolbarSide:first-child .btn{flex:1 1 calc(50% - 6px);min-height:42px;font-size:12px}
+  .catalogToolbar .toolbarSide:last-child{display:grid;grid-template-columns:1.15fr .8fr .8fr;gap:6px}
+  .catalogToolbar .toolbarSide:last-child .btn{width:100%;font-size:11px;padding:8px 5px!important}
+  .compactAction{font-size:11px!important}
+}
+@media(max-width:420px){
+  .headWrap{padding-inline:8px}
+  .brandMain{font-size:34px}
+  .brandTelecom{font-size:10px;padding:3px 8px}
+  .brandKgp{font-size:14px}
+  .headerIconBtn{width:39px;height:39px;min-width:39px;font-size:16px}
+  .headTitle{display:none}
+  .navWrap #search{height:47px;font-size:13px}
+  .searchHelp{display:none}
+  .catalogToolbar .toolbarSide:first-child .btn{font-size:11px}
+}
+</style>
+
+<style>
+/* KHIRO TELECOM — final mobile balance pass */
+.headActions{display:flex;align-items:center;justify-content:flex-end;gap:7px}
+.headerIconBtn{width:42px!important;height:42px!important;min-width:42px!important;padding:0!important;border-radius:14px!important;display:inline-flex!important;align-items:center;justify-content:center;font-size:17px!important}
+.headerIconBtn:first-child{width:46px!important;min-width:46px!important}
+.catalogToolbar .toolbarSide:last-child{gap:7px}
+.compactAction{font-size:11px!important;padding:8px 10px!important;min-height:38px!important}
+#favoritesFab{left:18px;bottom:18px}
+@media(max-width:760px){
+  .siteHeader{position:sticky;top:0}
+  .headWrap{grid-template-columns:1fr auto!important;grid-template-areas:"logo actions"!important;align-items:center!important;padding:7px 9px 8px!important}
+  .brandLogo{justify-self:start}
+  .headActions{justify-self:end;gap:5px}
+  .headerIconBtn{width:39px!important;height:39px!important;min-width:39px!important;border-radius:12px!important;font-size:16px!important}
+  .headerIconBtn:first-child{width:43px!important;min-width:43px!important}
+  .navWrap{padding:4px 9px 10px!important}
+  .navWrap #search{height:48px!important;border-radius:15px!important}
+  .catalogToolbar{position:static!important;margin:8px 0 0!important;padding:7px!important;border-radius:16px!important}
+  .catalogToolbar .toolbarSide:first-child{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px!important}
+  .catalogToolbar .toolbarSide:first-child .btn{min-width:0!important;width:100%!important;min-height:41px!important;font-size:11px!important}
+  .catalogToolbar .toolbarSide:last-child{display:flex!important;justify-content:stretch!important;gap:6px!important;margin-top:6px}
+  .catalogToolbar .toolbarSide:last-child .btn{flex:1!important;width:auto!important;min-width:0!important;min-height:36px!important;font-size:10px!important;padding:7px 4px!important}
+  .catalogHeading{margin:18px 2px 12px!important}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+  .card{border-radius:16px!important}
+  .picWrap{height:150px!important}
+  .body{padding:10px!important}
+  .title{font-size:13px!important}
+  .price{font-size:18px!important}
+  .productTools .btn{width:100%!important;min-height:34px!important;font-size:10px!important;padding:5px!important}
+  #favoritesFab{left:12px;bottom:12px;padding:10px 12px;font-size:11px}
+  #installFab{right:12px!important;bottom:12px!important;padding:10px 12px!important;font-size:11px!important}
+}
+@media(max-width:380px){
+  .headerIconBtn{width:36px!important;height:36px!important;min-width:36px!important;font-size:15px!important}
+  .headerIconBtn:first-child{width:40px!important;min-width:40px!important}
+  .brandMain{font-size:30px!important}
+  .brandTelecom{font-size:9px!important}
+  .brandKgp{font-size:12px!important}
+  .catalogToolbar .toolbarSide:first-child .btn{font-size:10px!important}
+  .grid{gap:8px!important}
+  .picWrap{height:135px!important}
+}
+</style>
+</head>
 <body>
 
 <header class="siteHeader"><div class="wrap headWrap">
   <div class="headActions">
-    <button class="btn" onclick="openCart()">🛒 السلة <span id="cartCount" class="countPill">0</span></button>
-    <button class="btn" onclick="shareApp()">🔗 مشاركة</button>
-    <button class="btn" onclick="openCustomerSettings()">⚙️ الإعدادات</button>
+    <button class="btn headerIconBtn cartHeaderBtn" onclick="openCart()" aria-label="السلة" title="السلة">🛒 <span id="cartCount" class="countPill">0</span></button>
+    <button class="btn headerIconBtn" onclick="shareApp()" aria-label="مشاركة" title="مشاركة التطبيق">↗️</button>
+    <button class="btn headerIconBtn settingsHeaderBtn" onclick="openCustomerSettings()" aria-label="الإعدادات" title="الإعدادات">⚙️</button>
   </div>
   <div class="brandLogo" aria-label="KHIRO TELECOM KGP" onclick="secretAdminAccess()" title="KHIRO TELECOM KGP">
     <div class="brandMain">KH<span>I</span>RO</div><div class="brandTelecom">TELECOM</div><div class="brandKgp">KGP</div>
@@ -121,9 +203,9 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;background-ima
     <button class="btn" id="chargeTab" onclick="showCatalog('charges')">🔌 ناب شارج</button>
   </div>
   <div class="toolbarSide">
-    <button class="btn green" onclick="openWholesale()">👥 سعر الجملة</button>
-    <button class="btn" onclick="openComplaint()">💬 شكاوى</button>
-    <button class="btn" onclick="openThanks()">♡ شكر المحل</button>
+    <button class="btn green" onclick="openWholesale()">👥 الجملة</button>
+    <button class="btn compactAction" onclick="openComplaint()">💬 شكوى</button>
+    <button class="btn compactAction" onclick="openThanks()">⭐ تقييم</button>
   </div>
 </div>
 <div class="catalogHeading"><h2 id="catalogTitle">الشاشات <span class="sectionIcon">🖥️</span> <span class="muted" id="screenCount"></span></h2></div>
@@ -373,9 +455,9 @@ function toggleFavorite(type,i){const k=productKey(type,i);favorites=favorites.i
 function toggleCompare(type,i){const k=productKey(type,i);if(compareList.includes(k))compareList=compareList.filter(x=>x!==k);else{if(compareList.length>=4){toast("المقارنة تسمح بحد أقصى 4 منتجات","error");return}compareList.push(k)}persistExtras();toast(compareList.includes(k)?"أضيف للمقارنة":"أزيل من المقارنة","success");rerenderActive()}
 function showFavorites(){if(!favorites.length){toast("لا توجد منتجات في المفضلة بعد","error");return}const old=document.getElementById("favoritesModal");if(old)old.remove();const items=favorites.map(k=>{const inf=keyInfo(k),p=getProduct({k});return p?`<div class="compareRow"><div><b>${esc(p[0])} — ${esc(p[1])}</b><div class="muted">${esc(p[2]||"")} • ${priceUnset(p)?"السعر غير محدد":money(displayPrice(p))}</div></div><button class="btn danger" onclick="toggleFavorite('${inf.type}',${inf.i});document.getElementById('favoritesModal')?.remove()">حذف</button></div>`:""}).join("");document.body.insertAdjacentHTML("beforeend",`<div id="favoritesModal" class="modal show" onclick="if(event.target===this)this.remove()"><div class="sheet" style="max-width:650px"><div class="top"><h2>❤️ المفضلة</h2><button class="btn" onclick="this.closest('.modal').remove()">إغلاق</button></div>${items}</div></div>`)}
 function showCompare(){if(!compareList.length){toast("اختر منتجات للمقارنة أولاً","error");return}const rows=compareList.map(k=>{const p=getProduct({k});return p?`<div class="compareCard"><b>${esc(p[0])} — ${esc(p[1])}</b><span>${esc(p[2]||"")}</span><strong>${priceUnset(p)?"السعر غير محدد":money(displayPrice(p))}</strong></div>`:""}).join("");document.body.insertAdjacentHTML("beforeend",`<div id="compareModal" class="modal show" onclick="if(event.target===this)this.remove()"><div class="sheet" style="max-width:900px"><div class="top"><h2>⚖️ مقارنة المنتجات</h2><button class="btn" onclick="this.closest('.modal').remove()">إغلاق</button></div><div class="compareGrid">${rows}</div></div></div>`)}
-function updateFloatingTools(){const c=document.getElementById("compareFab"),f=document.getElementById("favoritesFab");if(c)c.textContent=`⚖️ مقارنة ${compareList.length?"("+compareList.length+")":""}`;if(f)f.textContent=`❤️ المفضلة ${favorites.length?"("+favorites.length+")":""}`}
+function updateFloatingTools(){const f=document.getElementById("favoritesFab");if(f)f.textContent=`❤️ المفضلة ${favorites.length?"("+favorites.length+")":""}`}
 function rerenderActive(){const admin=document.getElementById("adminSection").classList.contains("show");if(admin)return;const shown=["screens","batteries","covers","charges"].find(x=>document.getElementById(x==="screens"?"screenSection":x==="batteries"?"batterySection":x==="covers"?"coverSection":"chargeSection").classList.contains("show"));if(shown)showCatalog(shown)}
-function decorateCard(card,type,i){if(!card)return;const k=productKey(type,i);if(card.querySelector(".productTools"))return;card.insertAdjacentHTML("beforeend",`<div class="productTools"><button class="btn ${favorites.includes(k)?"favOn":""}" onclick="toggleFavorite('${type}',${i})">${favorites.includes(k)?"♥":"♡"} مفضلة</button><button class="btn ${compareList.includes(k)?"compareOn":""}" onclick="toggleCompare('${type}',${i})">⚖️ مقارنة</button></div>`)}
+function decorateCard(card,type,i){if(!card)return;const k=productKey(type,i);if(card.querySelector(".productTools"))return;card.insertAdjacentHTML("beforeend",`<div class="productTools"><button class="btn ${favorites.includes(k)?"favOn":""}" onclick="toggleFavorite('${type}',${i})">${favorites.includes(k)?"♥":"♡"} مفضلة</button></div>`)}
 function decorateRendered(containerId,type,list,indices){const out=document.getElementById(containerId);if(!out)return;const cards=[...out.querySelectorAll("article.card")];cards.forEach((card,n)=>decorateCard(card,type,indices?indices[n]:n));}
 function setDiscount(type,i){const k=productKey(type,i),p=getProduct({k});if(!p||priceUnset(p)){toast("حدد سعر المنتج أولاً","error");return}const current=Number(discounts[k]||0);const v=prompt("نسبة الخصم % (0 لإلغاء الخصم)",String(current));if(v===null)return;const n=Math.max(0,Math.min(90,Number(v)||0));if(n)discounts[k]=n;else delete discounts[k];persistExtras();toast(n?`تم وضع خصم ${n}%`:"تم إلغاء الخصم","success");rerenderActive();renderAdminTables()}
 function discountFor(p){const k=findKey(p);return k?Number(discounts[k]||0):0}
@@ -500,8 +582,8 @@ function applyCustomerLanguage(){
 
   const actions=document.querySelectorAll(".headActions .btn");
   if(actions[0])actions[0].innerHTML=t.cart+' <span id="cartCount" class="countPill">0</span>';
-  if(actions[1])actions[1].textContent=t.share;
-  if(actions[2])actions[2].textContent=t.settings;
+  if(actions[1]){actions[1].textContent="↗️";actions[1].setAttribute("aria-label",t.share);actions[1].setAttribute("title",t.share);}
+  if(actions[2]){actions[2].textContent="⚙️";actions[2].setAttribute("aria-label",t.settings);actions[2].setAttribute("title",t.settings);}
 
   const toolbar=document.querySelectorAll(".catalogToolbar .toolbarSide .btn");
   if(toolbar[0])toolbar[0].textContent=t.screens;
@@ -616,7 +698,7 @@ function resetAll(){if(!confirm("سيتم حذف تعديلاتك المحلية
 applySettings();brandsUI();renderScreens();renderBatteries();
 </script>
 
-<div id="compareFab" onclick="showCompare()">⚖️ مقارنة</div><div id="favoritesFab" onclick="showFavorites()">❤️ المفضلة</div><button id="installFab" onclick="installApp()">📲 تثبيت التطبيق</button>
+<div id="favoritesFab" onclick="showFavorites()">❤️ المفضلة</div><button id="installFab" onclick="installApp()">📲 تثبيت التطبيق</button>
 <style>#kgpToast{position:fixed;top:18px;left:50%;transform:translate(-50%,-18px);opacity:0;z-index:100;max-width:calc(100% - 30px);padding:12px 18px;border-radius:14px;border:1px solid rgba(102,160,255,.35);background:rgba(8,20,35,.94);box-shadow:0 15px 40px rgba(0,0,0,.35);backdrop-filter:blur(14px);font-weight:800;transition:.25s}.kgpToast.show{opacity:1;transform:translate(-50%,0)}.kgpToast.error{border-color:rgba(255,77,103,.5)}.compareGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.compareCard{padding:16px;border:1px solid rgba(116,160,214,.2);border-radius:16px;background:rgba(7,17,30,.75);display:flex;flex-direction:column;gap:8px}.compareCard span{color:var(--muted);font-size:12px}.compareCard strong{color:var(--yellow);font-size:18px}.compareRow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid rgba(116,160,214,.12)}.oldPrice{font-size:12px;color:#7e90a6;margin-left:5px}.discountBadge{display:inline-block;font-size:10px;padding:3px 6px;border-radius:999px;background:rgba(255,77,103,.12);color:#ff7890;border:1px solid rgba(255,77,103,.25)}@media(max-width:700px){.compareGrid{grid-template-columns:1fr 1fr}}@media(max-width:420px){.compareGrid{grid-template-columns:1fr}.compareCard{padding:12px}}</style>
 <script>
 let deferredInstallPrompt=null;window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredInstallPrompt=e;const b=document.getElementById("installFab");if(b)b.style.display="block"});async function installApp(){if(!deferredInstallPrompt)return;deferredInstallPrompt.prompt();try{await deferredInstallPrompt.userChoice}catch(e){}deferredInstallPrompt=null;const b=document.getElementById("installFab");if(b)b.style.display="none"}
