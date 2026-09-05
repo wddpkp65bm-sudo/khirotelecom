@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0b63f6">
+<meta name="theme-color" content="#f28a16">
 <meta name="description" content="KHIRO TELECOM KGP - كتالوج قطع غيار الهواتف">
 <title>KHIRO TELECOM</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2714%27 fill=%27%230b63f6%27/%3E%3Ctext x=%2732%27 y=%2741%27 text-anchor=%27middle%27 font-family=%27Arial%27 font-size=%2724%27 font-weight=%27700%27 fill=%27white%27%3EKG%3C/text%3E%3C/svg%3E">
@@ -245,6 +245,342 @@ nav#brands .chip.active{background:rgba(37,99,235,.3)!important;border-color:#5b
   window.khiroSearchVariants=modelVariants;
 })();
 </script>
+
+
+<style id="khiro-design-4-final">
+/* KHIRO TELECOM — Design 4: clean warm/orange mobile-first UI */
+:root{
+  --k4-bg:#fffaf2;
+  --k4-card:#fffdf8;
+  --k4-soft:#fff0dd;
+  --k4-accent:#f28a16;
+  --k4-accent-dark:#d96f05;
+  --k4-text:#141a22;
+  --k4-muted:#727781;
+  --k4-line:#eadbc8;
+  --k4-shadow:0 8px 26px rgba(58,38,18,.08);
+}
+html,body{background:var(--k4-bg)!important;color:var(--k4-text)!important}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Tahoma,Arial,sans-serif!important;
+  background:linear-gradient(180deg,#fffdf8 0%,#fff9ef 100%)!important;
+  padding-bottom:82px;
+}
+body:before{display:none!important}
+
+/* Header */
+.siteHeader{
+  position:relative!important;
+  top:auto!important;
+  background:rgba(255,253,248,.97)!important;
+  border-bottom:1px solid var(--k4-line)!important;
+  box-shadow:0 5px 20px rgba(80,50,20,.05)!important;
+  backdrop-filter:blur(14px)!important;
+}
+.wrap{max-width:1180px}
+.headWrap{
+  display:grid!important;
+  grid-template-columns:1fr auto 1fr!important;
+  align-items:center!important;
+  gap:12px!important;
+  padding:14px 16px 8px!important;
+}
+.headActions{gap:7px!important;justify-content:flex-start!important}
+.headActions .btn,
+.headActions>button{
+  min-width:48px;height:48px;padding:0 10px!important;
+  border-radius:15px!important;
+  border:1px solid #eadcc9!important;
+  background:#fff!important;
+  color:var(--k4-text)!important;
+  box-shadow:0 4px 12px rgba(60,40,20,.06)!important;
+}
+.countPill{background:var(--k4-accent)!important;color:#fff!important}
+.brandLogo{filter:none!important}
+.brandMain{
+  color:#1559a8!important;
+  text-shadow:none!important;
+  letter-spacing:-3px!important;
+}
+.brandMain span{color:var(--k4-accent)!important}
+.brandTelecom{
+  border-color:var(--k4-accent)!important;
+  color:#171b21!important;
+  background:#fff!important;
+}
+.brandKgp{color:var(--k4-accent)!important}
+.headTitle{
+  text-align:right!important;
+  color:var(--k4-text)!important;
+}
+.headTitle b{color:#171b21!important}
+.headTitle b span{color:var(--k4-accent)!important}
+.headTitle small{color:var(--k4-muted)!important}
+
+/* Search + brands */
+.navWrap{padding:8px 16px 18px!important}
+.navWrap #search{
+  height:58px!important;
+  border-radius:30px!important;
+  background:#fff!important;
+  color:var(--k4-text)!important;
+  border:1px solid var(--k4-line)!important;
+  box-shadow:0 6px 20px rgba(70,45,20,.06)!important;
+  padding-inline:22px!important;
+}
+.navWrap #search::placeholder{color:#a6a09a!important}
+.navWrap #search:focus{
+  border-color:var(--k4-accent)!important;
+  box-shadow:0 0 0 4px rgba(242,138,22,.12)!important;
+}
+.searchHelp{
+  color:#8b8b8b!important;
+  background:#fff8ee;
+  border-radius:12px;
+  padding:7px 10px;
+  margin-top:7px!important;
+}
+.navWrap nav{gap:8px!important;padding:12px 0 0!important}
+.chip{
+  background:#fff!important;
+  color:#343941!important;
+  border:1px solid var(--k4-line)!important;
+  border-radius:24px!important;
+  box-shadow:none!important;
+}
+.chip.active{
+  background:#fff!important;
+  color:#111!important;
+  border:2px solid var(--k4-accent)!important;
+}
+
+/* Main category panel */
+main.wrap{padding-left:16px!important;padding-right:16px!important}
+.catalogToolbar{
+  position:relative!important;
+  top:auto!important;
+  z-index:2!important;
+  margin:8px 0 0!important;
+  padding:12px!important;
+  display:grid!important;
+  grid-template-columns:1fr!important;
+  gap:10px!important;
+  background:#fff!important;
+  border:1px solid var(--k4-line)!important;
+  border-radius:24px!important;
+  box-shadow:var(--k4-shadow)!important;
+  backdrop-filter:none!important;
+}
+.catalogToolbar .toolbarSide{
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  gap:9px!important;
+  width:100%!important;
+}
+.catalogToolbar .toolbarSide:last-child{
+  grid-template-columns:1fr 1fr 1fr!important;
+}
+.catalogToolbar .btn{
+  min-height:56px!important;
+  border-radius:17px!important;
+  background:#fffaf3!important;
+  color:#242932!important;
+  border:1px solid var(--k4-line)!important;
+  box-shadow:none!important;
+  font-size:15px!important;
+}
+.catalogToolbar .btn.primary{
+  background:linear-gradient(135deg,#ff9c28,#ef7d08)!important;
+  color:#fff!important;
+  border-color:#ef7d08!important;
+  box-shadow:0 7px 16px rgba(242,138,22,.22)!important;
+}
+.catalogToolbar .btn.green{
+  background:#fef3e7!important;
+  color:#bc620a!important;
+  border-color:#f2d5b2!important;
+}
+.catalogToolbar .btn:hover{transform:none!important}
+
+/* Heading */
+.catalogHeading{
+  margin:25px 4px 14px!important;
+  justify-content:flex-start!important;
+}
+.catalogHeading h2{
+  color:var(--k4-text)!important;
+  font-size:28px!important;
+  font-weight:950!important;
+}
+.sectionIcon{color:var(--k4-accent)!important}
+.muted{color:#8a9098!important}
+
+/* Product cards */
+.grid{gap:12px!important}
+.card{
+  background:#fff!important;
+  border:1px solid var(--k4-line)!important;
+  border-radius:22px!important;
+  box-shadow:var(--k4-shadow)!important;
+  color:var(--k4-text)!important;
+}
+.card:hover{
+  transform:translateY(-2px)!important;
+  border-color:#f0c18e!important;
+  box-shadow:0 12px 28px rgba(70,45,20,.11)!important;
+}
+.picWrap{
+  height:210px!important;
+  background:linear-gradient(180deg,#fff7ec,#fffdf9)!important;
+  border-bottom:1px solid #f0e4d5!important;
+}
+.pic{filter:drop-shadow(0 8px 9px rgba(0,0,0,.18))!important}
+.brandBadge{
+  background:#fff!important;
+  color:#26313d!important;
+  border:2px solid var(--k4-accent)!important;
+  border-radius:12px!important;
+}
+.body{color:var(--k4-text)!important}
+.title{color:var(--k4-text)!important}
+.price,.priceUnset{color:var(--k4-accent)!important}
+.priceAsk{
+  background:var(--k4-accent)!important;
+  border-color:var(--k4-accent)!important;
+}
+
+/* Other catalog panels */
+.panel{
+  background:#fff!important;
+  border:1px solid var(--k4-line)!important;
+  color:var(--k4-text)!important;
+  border-radius:22px!important;
+  box-shadow:var(--k4-shadow)!important;
+}
+.notice,.settingBox,.feature,.adminCard{
+  background:#fffaf3!important;
+  border-color:var(--k4-line)!important;
+  color:var(--k4-text)!important;
+}
+input,select,textarea,.form input,.form select,.form textarea{
+  background:#fff!important;
+  color:var(--k4-text)!important;
+  border-color:#e5d8c7!important;
+}
+input:focus,select:focus,textarea:focus{
+  border-color:var(--k4-accent)!important;
+  box-shadow:0 0 0 3px rgba(242,138,22,.12)!important;
+}
+.btn{
+  background:#fff!important;
+  color:var(--k4-text)!important;
+  border-color:var(--k4-line)!important;
+}
+.btn.primary{
+  background:linear-gradient(135deg,#ff9c28,#ef7d08)!important;
+  color:#fff!important;
+  border-color:#ef7d08!important;
+}
+.btn.green{
+  background:#25c76a!important;color:#fff!important;border-color:#25c76a!important;
+}
+.wa{
+  background:linear-gradient(135deg,#25d366,#18b957)!important;
+}
+.total{color:var(--k4-accent)!important}
+.modal{background:rgba(30,20,10,.48)!important}
+.sheet{
+  background:#fffdf9!important;
+  color:var(--k4-text)!important;
+  border-color:var(--k4-line)!important;
+}
+
+/* Feature strip */
+.featuresGrid{
+  margin:20px auto 10px!important;
+}
+.feature b{color:var(--k4-accent)!important}
+
+/* Floating old buttons are replaced by the cleaner bottom bar */
+#favoritesFab{display:none!important}
+#khiroHistoryModal,#khiroInvoiceModal{z-index:99999!important}
+
+/* New bottom navigation */
+#khiroBottomNav{
+  position:fixed;
+  left:10px;right:10px;bottom:10px;
+  z-index:99990;
+  height:68px;
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:4px;
+  padding:6px;
+  background:rgba(255,253,248,.96);
+  border:1px solid var(--k4-line);
+  border-radius:22px;
+  box-shadow:0 10px 35px rgba(40,25,10,.16);
+  backdrop-filter:blur(16px);
+}
+#khiroBottomNav button{
+  border:0;background:transparent;color:#6d7076;
+  border-radius:17px;font:800 10px/1.2 inherit;
+  cursor:pointer;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:3px;
+}
+#khiroBottomNav button .k4ico{font-size:20px;line-height:1}
+#khiroBottomNav button.active{
+  background:var(--k4-accent);color:#fff;
+  box-shadow:0 5px 14px rgba(242,138,22,.22);
+}
+
+/* Hide only the old history floating button; function remains available */
+body>button[onclick="showKhiroHistory()"]{display:none!important}
+
+footer{
+  color:#8b8b8b!important;
+  border-top:1px solid var(--k4-line)!important;
+}
+
+/* Mobile polish */
+@media(max-width:760px){
+  .headWrap{
+    grid-template-columns:1fr auto!important;
+    grid-template-areas:"logo actions" "title title"!important;
+  }
+  .brandLogo{grid-area:logo;text-align:right}
+  .headActions{grid-area:actions;justify-content:flex-start}
+  .headTitle{grid-area:title;text-align:right;margin-top:3px}
+  .headTitle small{margin-top:3px}
+  .catalogHeading h2{font-size:24px!important}
+}
+@media(max-width:520px){
+  .headWrap{padding:10px 12px 7px!important}
+  .headActions .btn,.headActions>button{min-width:43px;height:43px;border-radius:14px!important}
+  .brandMain{font-size:39px!important}
+  .brandTelecom{font-size:11px!important;padding:4px 11px!important}
+  .brandKgp{font-size:16px!important}
+  .headTitle{display:none!important}
+  .navWrap{padding:8px 12px 12px!important}
+  .navWrap #search{height:54px!important;font-size:14px!important}
+  .searchHelp{font-size:10px!important}
+  main.wrap{padding-left:12px!important;padding-right:12px!important}
+  .catalogToolbar{border-radius:22px!important;padding:10px!important}
+  .catalogToolbar .btn{min-height:52px!important;font-size:13px!important;padding:7px 6px!important}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+  .picWrap{height:180px!important}
+  .pic{width:90px!important;height:150px!important}
+  .body{padding:9px!important}
+  .title{font-size:13px!important}
+  .price{font-size:18px!important}
+  .featuresGrid{padding:0 12px!important}
+}
+@media(max-width:380px){
+  #khiroBottomNav{left:6px;right:6px;bottom:6px}
+  #khiroBottomNav button{font-size:9px}
+  #khiroBottomNav button .k4ico{font-size:18px}
+  .catalogToolbar .btn{font-size:12px!important}
+}
+</style>
 
 </head>
 <body>
@@ -790,7 +1126,7 @@ window.addEventListener("appinstalled",()=>{deferredInstallPrompt=null;const b=d
 function installApp(){if(isStandalone()){toast("التطبيق مثبت بالفعل على الشاشة الرئيسية","success");return}if(deferredInstallPrompt){deferredInstallPrompt.prompt();deferredInstallPrompt.userChoice.finally(()=>{deferredInstallPrompt=null;const b=document.getElementById("installFab");if(b)b.style.display="none"});return}if(isIOS()){if(document.getElementById("iosInstallModal"))return;document.body.insertAdjacentHTML("beforeend",`<div id="iosInstallModal" class="modal show" onclick="if(event.target===this)this.remove()"><div class="sheet" style="max-width:430px"><div class="top"><h2>📲 تثبيت التطبيق</h2><button class="btn" onclick="this.closest('.modal').remove()">إغلاق</button></div><div class="notice">على iPhone / iPad لا يمكن للتطبيق تثبيت نفسه تلقائياً.</div><ol style="line-height:2;font-weight:700"><li>افتح التطبيق في <b>Safari</b>.</li><li>اضغط زر <b>المشاركة ↗️</b>.</li><li>اختر <b>إضافة إلى الشاشة الرئيسية</b>.</li><li>اضغط <b>إضافة</b>.</li></ol></div></div>`);return}toast("افتح التطبيق من Chrome على Android ثم اضغط زر التثبيت","error")}
 function updateInstallButton(){const b=document.getElementById("installFab");if(!b)return;if(isStandalone()){b.style.display="none";return}if(deferredInstallPrompt||isIOS())b.style.display="inline-flex"}
 setTimeout(updateInstallButton,700);
-const manifest={name:"KHIRO TELECOM KGP",short_name:"KHIRO KGP",start_url:".",display:"standalone",background_color:"#050b14",theme_color:"#0b63f6",dir:"rtl",lang:"ar",description:"كتالوج قطع غيار الهواتف"};const mblob=new Blob([JSON.stringify(manifest)],{type:"application/manifest+json"});const mlink=document.createElement("link");mlink.rel="manifest";mlink.href=URL.createObjectURL(mblob);document.head.appendChild(mlink);
+const manifest={name:"KHIRO TELECOM KGP",short_name:"KHIRO KGP",start_url:".",display:"standalone",background_color:"#050b14",theme_color:"#f28a16",dir:"rtl",lang:"ar",description:"كتالوج قطع غيار الهواتف"};const mblob=new Blob([JSON.stringify(manifest)],{type:"application/manifest+json"});const mlink=document.createElement("link");mlink.rel="manifest";mlink.href=URL.createObjectURL(mblob);document.head.appendChild(mlink);
 updateFloatingTools();
 </script>
 <script>
@@ -946,5 +1282,24 @@ function openProductModal(type,i){
   },true);
 })();
 </script>
+
+
+<nav id="khiroBottomNav" aria-label="التنقل الرئيسي">
+  <button class="active" type="button" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <span class="k4ico">⌂</span><span>الرئيسية</span>
+  </button>
+  <button type="button" onclick="showKhiroHistory()">
+    <span class="k4ico">▣</span><span>الطلبات</span>
+  </button>
+  <button type="button" onclick="openCart()">
+    <span class="k4ico">🛒</span><span>السلة</span>
+  </button>
+  <button type="button" onclick="showCompare()">
+    <span class="k4ico">⚖</span><span>المقارنة</span>
+  </button>
+  <button type="button" onclick="showFavorites()">
+    <span class="k4ico">♡</span><span>المفضلة</span>
+  </button>
+</nav>
 
 </body></html>
