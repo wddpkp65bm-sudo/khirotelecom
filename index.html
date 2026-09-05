@@ -1020,13 +1020,45 @@ async function shareApp(){try{if(navigator.share)await navigator.share({title:se
 
 function openWholesale(){document.getElementById("wholesalePinInput").value="";document.getElementById("wholesalePinModal").classList.add("show");setTimeout(()=>document.getElementById("wholesalePinInput").focus(),100)}
 function closeWholesale(){document.getElementById("wholesalePinModal").classList.remove("show")}
-function checkWholesalePin(){if(document.getElementById("wholesalePinInput").value===String(settings.wholesalePin||DEFAULT_SETTINGS.wholesalePin)){closeWholesale();priceMode="wholesale";showCatalog("screens");toast("تم فتح غرفة الجملة • الأسعار الآن بالجملة","success")}else toast("كلمة سر الجملة غير صحيحة.","error")}
+function normalizeAccessCode(value){
+  return String(value??"")
+    .replace(/[٠-٩]/g,d=>String("٠١٢٣٤٥٦٧٨٩".indexOf(d)))
+    .replace(/[\u200B-\u200D\uFEFF]/g,"")
+    .trim();
+}
+function checkWholesalePin(){
+  const entered=normalizeAccessCode(document.getElementById("wholesalePinInput").value);
+  const saved=normalizeAccessCode(settings.wholesalePin||DEFAULT_SETTINGS.wholesalePin);
+  if(entered && entered===saved){
+    closeWholesale();
+    priceMode="wholesale";
+    showCatalog("screens");
+    toast("تم فتح غرفة الجملة • الأسعار الآن بالجملة","success");
+  }else{
+    toast("كلمة سر الجملة غير صحيحة.","error");
+    document.getElementById("wholesalePinInput").select();
+  }
+}
 function exitWholesale(){priceMode="retail";showCatalog("screens");toast("تم الرجوع إلى أسعار التجزئة","success")}
 let secretTapCount=0,secretTapTimer=null;
 function secretAdminAccess(){secretTapCount++;clearTimeout(secretTapTimer);secretTapTimer=setTimeout(()=>secretTapCount=0,1800);if(secretTapCount>=5){secretTapCount=0;openAdmin();}}
 function openAdmin(){document.getElementById("pinInput").value="";document.getElementById("pinModal").classList.add("show");setTimeout(()=>document.getElementById("pinInput").focus(),100)}
 function closePin(){document.getElementById("pinModal").classList.remove("show")}
-function checkPin(){if(document.getElementById("pinInput").value===String(settings.pin)){closePin();["screenSection","batterySection","coverSection","chargeSection"].forEach(id=>document.getElementById(id).classList.remove("show"));document.getElementById("adminSection").classList.add("show");renderAdminTables();window.scrollTo({top:0,behavior:"smooth"})}else toast("رمز الإدارة غير صحيح.","error")}
+function checkPin(){
+  const entered=normalizeAccessCode(document.getElementById("pinInput").value);
+  const saved=normalizeAccessCode(settings.pin||DEFAULT_SETTINGS.pin);
+  if(entered && entered===saved){
+    closePin();
+    ["screenSection","batterySection","coverSection","chargeSection"].forEach(id=>document.getElementById(id).classList.remove("show"));
+    document.getElementById("adminSection").classList.add("show");
+    renderAdminTables();
+    window.scrollTo({top:0,behavior:"smooth"});
+    toast("تم الدخول إلى لوحة الإدارة","success");
+  }else{
+    toast("رمز الإدارة غير صحيح.","error");
+    document.getElementById("pinInput").select();
+  }
+}
 document.getElementById("pinInput").addEventListener("keydown",e=>{if(e.key==="Enter")checkPin()});document.getElementById("wholesalePinInput").addEventListener("keydown",e=>{if(e.key==="Enter")checkWholesalePin()})
 
 // بحث سريع وخفيف: لا نعيد بناء الصفحة عدة مرات أثناء الكتابة
@@ -1100,7 +1132,17 @@ function editCharge(i){const p=charges[i];currentChargeEdit=i;document.getElemen
 function cancelChargeEdit(){currentChargeEdit=-1;["fchbrand","fchmodel","fchtype","fchimage"].forEach(id=>document.getElementById(id).value="");document.getElementById("fchprice").value="0";document.getElementById("chargeSaveBtn").textContent="+ إضافة ناب شارج"}
 function deleteCharge(i){if(confirm("حذف هذا ناب الشارج؟")){charges.splice(i,1);saveAll();renderCharges();renderAdminTables()}}
 
-function saveSettings(){settings.name=f("sName")||DEFAULT_SETTINGS.name;settings.subtitle=f("sSubtitle")||DEFAULT_SETTINGS.subtitle;settings.whatsapp=f("sWhatsapp").replace(/\D/g,"")||DEFAULT_SETTINGS.whatsapp;settings.pin=f("sPin")||DEFAULT_SETTINGS.pin;settings.wholesalePin=f("sWholesalePin")||DEFAULT_SETTINGS.wholesalePin;settings.retailMarkup=Math.max(0,Number(f("sRetailMarkup"))||0);saveAll();applySettings();toast("تم حفظ إعدادات المتجر","success")}
+function saveSettings(){
+  settings.name=f("sName")||DEFAULT_SETTINGS.name;
+  settings.subtitle=f("sSubtitle")||DEFAULT_SETTINGS.subtitle;
+  settings.whatsapp=f("sWhatsapp").replace(/\D/g,"")||DEFAULT_SETTINGS.whatsapp;
+  settings.pin=normalizeAccessCode(f("sPin"))||DEFAULT_SETTINGS.pin;
+  settings.wholesalePin=normalizeAccessCode(f("sWholesalePin"))||DEFAULT_SETTINGS.wholesalePin;
+  settings.retailMarkup=Math.max(0,Number(f("sRetailMarkup"))||0);
+  saveAll();
+  applySettings();
+  toast("تم حفظ إعدادات المتجر","success")
+}
 function renderAdminTables(){
   const sr=document.getElementById("screenRows");if(sr)sr.innerHTML=data.map((p,i)=>`<tr><td>${i+1}</td><td><img class="thumb" loading="lazy" decoding="async" src="${esc(screenImage(p))}" alt=""></td><td><b>${esc(p[0])}</b><br>${esc(p[1])}</td><td>${esc(p[2])}</td><td>${money(p[3])}</td><td><button class="btn" onclick="editScreen(${i})">تعديل</button> <button class="btn danger" onclick="deleteScreen(${i})">حذف</button> <button class="btn" onclick="setDiscount('s',${i})">خصم</button></td></tr>`).join("");
   const br=document.getElementById("batteryRows");if(br)br.innerHTML=batteries.map((p,i)=>`<tr><td>${i+1}</td><td><b>${esc(p[0])}</b><br>${esc(p[1])}</td><td>${money(p[3])}</td><td><button class="btn" onclick="editBattery(${i})">تعديل</button> <button class="btn danger" onclick="deleteBattery(${i})">حذف</button> <button class="btn" onclick="setDiscount('b',${i})">خصم</button></td></tr>`).join("");
