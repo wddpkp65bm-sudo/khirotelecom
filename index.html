@@ -586,13 +586,26 @@ footer{
 }
 </style>
 
+
+<style id="remove-search-overlay-button">
+/* KHIRO: keep the search field clean — no floating phone/calculator button over it */
+.navWrap > button,
+.navWrap #search + button,
+.navWrap .searchButton,
+.navWrap .search-btn,
+.navWrap .searchIcon,
+.navWrap .search-icon {
+  display:none !important;
+}
+</style>
+
 </head>
 <body>
 
 <header class="siteHeader"><div class="wrap headWrap">
   <div class="headActions">
     <button class="btn headerIconBtn cartHeaderBtn" onclick="openCart()" aria-label="السلة" title="السلة">🛒 <span id="cartCount" class="countPill">0</span></button>
-<button type="button" onclick="showKhiroBon()" title="إنشاء Bon">🧾 Bon</button><button id="installFab" class="btn headerIconBtn" onclick="installApp()" aria-label="تثبيت التطبيق" title="تثبيت التطبيق">📲</button>
+<button type="button" onclick="showKhiroBon()" title="إنشاء Bon">🧾 Bon</button>
     <button class="btn headerIconBtn" onclick="shareApp()" aria-label="مشاركة" title="مشاركة التطبيق">↗️</button>
     <button class="btn headerIconBtn settingsHeaderBtn" onclick="openCustomerSettings()" aria-label="الإعدادات" title="الإعدادات">⚙️</button>
   </div>
