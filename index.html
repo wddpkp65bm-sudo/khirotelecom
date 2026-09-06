@@ -733,62 +733,68 @@ main.wrap>.catalogToolbar, main.wrap>.catalogHeading{display:none!important}
 <script>
 function khiroHomeSearch(q){
   const input=document.getElementById('khHomeSearch');
-  if(input && q!==undefined) input.value=q;
-  const value=(q!==undefined?q:(input?input.value:'')).trim();
   const main=document.getElementById('search');
-  if(main) main.value=value;
-  if(typeof window.searchProducts==='function'){
-    try{ window.searchProducts(); }catch(e){}
+  const value=String(q!==undefined ? q : (input ? input.value : '')).trim();
+  if(input && q!==undefined) input.value=value;
+  if(!value){
+    if(input){ input.focus(); }
+    return;
   }
-  if(value){
-    try{
-      if(typeof showCatalog==='function'){
-        if(/coque|cover|case/i.test(value)) showCatalog('covers');
-        else if(/battery|بطاري/i.test(value)) showCatalog('batteries');
-        else if(/nappe|charge|شحن/i.test(value)) showCatalog('charges');
-        else showCatalog('screens');
-      }
-    }catch(e){}
+
+  // انسخ البحث إلى محرك البحث الرئيسي ثم شغّله فعلياً.
+  if(main){
+    main.value=value;
+    main.dispatchEvent(new Event('input',{bubbles:true}));
   }
-  window.scrollTo({top:0,behavior:'smooth'});
+
+  // اختر القسم المناسب قبل العرض حتى تعمل نتيجة البحث من الواجهة الرئيسية.
+  let section='screens';
+  const n=norm(value);
+  if(/(battery|بطاري)/i.test(n)) section='batteries';
+  else if(/(coque|cover|case|housse|كوفر|كفر)/i.test(n)) section='covers';
+  else if(/(nappe|charge|charging|flex|connecteur|شحن|شارج)/i.test(n)) section='charges';
+
+  if(typeof showCatalog==='function') showCatalog(section);
+  else if(main) main.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',code:'Enter',bubbles:true}));
+
+  setTimeout(()=>{
+    const target=document.getElementById('catalogSection') || document.getElementById('screenSection') || document.getElementById('batterySection') || document.getElementById('coverSection') || document.getElementById('chargeSection');
+    if(target) target.scrollIntoView({behavior:'smooth',block:'start'});
+  },50);
 }
+function khiroQuickSearch(q){khiroHomeSearch(q)}
 function khiroQuickSearch(q){khiroHomeSearch(q)}
 </script>
 
 </head>
 <body>
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  const btn=document.getElementById('khHomeSearchBtn');
+  const input=document.getElementById('khHomeSearch');
+  if(btn) btn.addEventListener('click',function(e){e.preventDefault();khiroHomeSearch();});
+  if(input) input.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();khiroHomeSearch();}});
+});
+</script>
 
-
-<header class="siteHeader khExactHeader" dir="rtl">
-  <div class="khHeaderInner">
-    <div class="khHeadLeft" dir="ltr">
-      <button class="khTopAction" onclick="showFavorites()" aria-label="المفضلة">
-        <span class="khTopIcon">♡</span><b>المفضلة</b>
-      </button>
-      <button class="khTopAction" onclick="showCompare()" aria-label="المقارنة">
-        <span class="khTopIcon">⚖</span><b>المقارنة</b>
-      </button>
-      <button class="khTopAction khCartTop" onclick="openCart()" aria-label="السلة">
-        <span class="khTopIcon">🛒<i id="khTopCartCount">0</i></span><b>السلة</b>
-      </button>
-    </div>
-
-    <div class="khHeaderLogo" onclick="secretAdminAccess()" aria-label="KHIRO TELECOM">
-      <div><strong>KHIRO</strong> <em>TELECOM</em></div>
-      <small>قطع غيار الهواتف بالجملة و التجزئة</small>
-    </div>
-
-    <div class="khHeadRight">
-      <button class="khLogin" onclick="openWholesale()">
-        <span>تسجيل الدخول</span><strong>♙</strong>
-      </button>
-      <button class="khMenu" onclick="openCustomerSettings()" aria-label="القائمة">
-        <span>القائمة</span><strong>☰</strong>
-      </button>
-    </div>
+<header class="siteHeader"><div class="wrap headWrap">
+  <div class="headActions">
+    <button class="btn headerIconBtn cartHeaderBtn" onclick="openCart()" aria-label="السلة" title="السلة">🛒 <span id="cartCount" class="countPill">0</span></button>
+<button type="button" onclick="showKhiroBon()" title="إنشاء Bon">🧾 Bon</button><button id="installFab" class="btn headerIconBtn" onclick="installApp()" aria-label="تثبيت التطبيق" title="تثبيت التطبيق">📲</button>
+    <button class="btn headerIconBtn" onclick="shareApp()" aria-label="مشاركة" title="مشاركة التطبيق">↗️</button>
+    <button class="btn headerIconBtn settingsHeaderBtn" onclick="openCustomerSettings()" aria-label="الإعدادات" title="الإعدادات">⚙️</button>
   </div>
-</header>
-
+  <div class="brandLogo" aria-label="KHIRO TELECOM KGP" onclick="secretAdminAccess()" title="KHIRO TELECOM KGP">
+    <div class="brandMain">KH<span>I</span>RO</div><div class="brandTelecom">TELECOM</div><div class="brandKgp">KGP</div>
+  </div>
+  <div class="headTitle"><b>KHIRO TELECOM <span>KGP</span></b><small id="shopSubtitle">كتالوج قطع غيار الهواتف</small></div>
+</div>
+<div class="wrap navWrap">
+  <input id="search" autocomplete="off" enterkeyhint="search"
+    placeholder="🔎 ابحث بالماركة أو الموديل… مثال: A15 / Samsung / coque / nappe charge">
+  <div class="searchHelp">💡 كوفر = coque = cover = case • ناب شارج = nappe charge = charging flex • يمكنك كتابة الموديل فقط.</div>
+  <nav id="brands"></nav>
+</div></header>
 
 <main class="wrap">
 
@@ -801,7 +807,7 @@ function khiroQuickSearch(q){khiroHomeSearch(q)}
       <span class="khSearchIcon">⌕</span>
       <input id="khHomeSearch" type="search" autocomplete="off"
              placeholder="مثال: A10 أو LCD A10 أو nappe A15 ...">
-      <button type="button" onclick="khiroHomeSearch()">بحث</button>
+      <button id="khHomeSearchBtn" type="button" onclick="khiroHomeSearch()">بحث</button>
     </div>
   </section>
 
@@ -1551,7 +1557,7 @@ function openProductModal(type,i){
 })();
 </script>
 
-
+<button type="button" onclick="showKhiroHistory()" title="سجل الطلبات" style="position:fixed;bottom:140px;left:16px;z-index:9997;border:0;border-radius:14px;padding:11px 14px;background:#0b63f6;color:#fff;font-weight:800">📋 الطلبات</button>
 
 <script id="khiro-order-autosave-hook">
 (function(){
@@ -1567,10 +1573,15 @@ function openProductModal(type,i){
 </script>
 
 
-
-<nav id="khiroBottomNav" class="khExactBottom" aria-label="التنقل الرئيسي" dir="rtl">
+<nav id="khiroBottomNav" aria-label="التنقل الرئيسي">
+  <button class="active" type="button" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <span class="k4ico">⌂</span><span>الرئيسية</span>
+  </button>
+  <button type="button" onclick="showKhiroHistory()">
+    <span class="k4ico">▣</span><span>الطلبات</span>
+  </button>
   <button type="button" onclick="openCart()">
-    <span class="k4ico">🛒<i id="khBottomCartCount">0</i></span><span>السلة</span>
+    <span class="k4ico">🛒</span><span>السلة</span>
   </button>
   <button type="button" onclick="showCompare()">
     <span class="k4ico">⚖</span><span>المقارنة</span>
@@ -1578,14 +1589,7 @@ function openProductModal(type,i){
   <button type="button" onclick="showFavorites()">
     <span class="k4ico">♡</span><span>المفضلة</span>
   </button>
-  <button type="button" onclick="document.getElementById('khHomeSearch')?.focus();document.getElementById('khHomeSearch')?.scrollIntoView({behavior:'smooth',block:'center'})">
-    <span class="k4ico">⌕</span><span>بحث</span>
-  </button>
-  <button class="active" type="button" onclick="document.body.classList.remove('khiroCatalogOpen');document.getElementById('khiroHome')?.style.setProperty('display','block');window.scrollTo({top:0,behavior:'smooth'})">
-    <span class="k4ico">⌂</span><span>الرئيسية</span>
-  </button>
 </nav>
-
 
 
 
@@ -1790,222 +1794,6 @@ body.khiroCatalogOpen #chargeSection.show{display:block!important}
     document.body.classList.add('khiroCatalogOpen');
     return original.apply(this,arguments);
   };
-})();
-</script>
-
-
-<style id="khiro-exact-reference-final">
-*{box-sizing:border-box}
-html,body{margin:0!important;background:#f8fbff!important;color:#123b76!important}
-body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Tahoma,Arial,sans-serif!important;padding-bottom:92px!important}
-.siteHeader.khExactHeader{
-  position:relative!important;top:auto!important;z-index:100!important;
-  height:112px!important;background:linear-gradient(100deg,#155bc9 0%,#1768d8 52%,#1459c6 100%)!important;
-  border:0!important;box-shadow:none!important;color:#fff!important
-}
-.khHeaderInner{
-  height:112px;max-width:1280px;margin:auto;padding:0 28px;
-  display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px
-}
-.khHeadLeft{display:flex;align-items:center;justify-content:flex-start;gap:30px;height:100%}
-.khTopAction{
-  border:0;background:transparent;color:#fff;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:2px;min-width:70px;height:82px;
-  font:inherit;cursor:pointer
-}
-.khTopIcon{font-size:38px;line-height:1;font-weight:300;position:relative}
-.khTopAction b{font-size:15px;font-weight:800;white-space:nowrap}
-.khTopIcon i{
-  position:absolute;top:-9px;right:-13px;background:#ff7427;color:#fff;border-radius:50%;
-  min-width:26px;height:26px;display:grid;place-items:center;font-style:normal;font-size:12px;
-  border:2px solid #1765d5
-}
-.khHeaderLogo{text-align:center;color:#fff;cursor:pointer;line-height:1.05;user-select:none}
-.khHeaderLogo>div{font-size:37px;font-weight:950;letter-spacing:-1.5px}
-.khHeaderLogo strong{color:#fff}.khHeaderLogo em{color:#ff7926;font-style:normal}
-.khHeaderLogo small{display:block;margin-top:8px;font-size:15px;font-weight:800;letter-spacing:0}
-.khHeadRight{display:flex;align-items:center;justify-content:flex-end;gap:18px}
-.khLogin{
-  height:55px;padding:0 22px;border:0;border-radius:30px;background:#fff;color:#145bc8;
-  display:flex;align-items:center;gap:9px;font:inherit;font-weight:900;font-size:16px;cursor:pointer
-}
-.khLogin strong{font-size:28px;font-weight:400;line-height:1}
-.khMenu{
-  border:0;background:transparent;color:#fff;display:flex;align-items:center;gap:10px;
-  font:inherit;font-size:16px;font-weight:800;cursor:pointer
-}
-.khMenu strong{font-size:31px;font-weight:400;line-height:.8}
-
-#khiroHome{max-width:1280px!important;margin:0 auto!important;padding:22px 30px 25px!important;background:#f8fbff}
-.khHero{
-  height:226px!important;border-radius:17px!important;padding:27px 22px!important;
-  background:linear-gradient(135deg,#1e6be0,#1457bc)!important;box-shadow:none!important;
-  display:flex;flex-direction:column;align-items:center;justify-content:center
-}
-.khHero h1{font-size:31px!important;margin:0 0 9px!important;font-weight:950!important;color:#fff!important}
-.khHero p{font-size:17px!important;margin:0 0 18px!important;color:#fff!important}
-.khSearchBox{
-  width:min(820px,92%);height:62px!important;border-radius:33px!important;padding:5px 6px 5px 18px!important;
-  background:#fff!important;box-shadow:none!important
-}
-.khSearchBox input{font-size:16px!important;color:#526d99!important}
-.khSearchBox button{height:52px!important;min-width:96px;border-radius:28px!important;background:#ff7727!important;font-size:17px!important}
-.khSearchIcon{font-size:34px!important;color:#1160cf!important}
-
-.khFeatures{
-  height:128px!important;margin:0!important;padding:17px 4px 16px!important;
-  display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:0!important;
-  border-bottom:1px solid #dbe5f1!important
-}
-.khFeature{border-left:1px solid #d3deeb!important;padding:0 25px!important;gap:16px!important}
-.khFeature:first-child{border-left:0!important}
-.khFeatureIcon{font-size:45px!important;color:#1260cf!important}
-.khFeature b{font-size:18px!important;color:#1655a0!important}
-.khFeature small{font-size:13px!important;color:#6b7f9d!important}
-
-.khSection{margin-top:23px!important}
-.khSectionTitle{justify-content:flex-start!important;margin:0 0 14px!important;gap:8px!important}
-.khSectionTitle h2{font-size:23px!important;color:#123f7c!important}
-.khSectionTitle>span{font-size:27px!important;color:#0d62d0!important}
-
-.khCategories{grid-template-columns:repeat(7,1fr)!important;gap:13px!important}
-.khCategories button{
-  min-height:142px!important;border-radius:11px!important;padding:14px 7px!important;
-  box-shadow:none!important
-}
-.khCategories span{font-size:40px!important}
-.khCategories b{font-size:15px!important;color:#163f75!important}
-.khCategories small{font-size:11px!important;color:#214b80!important}
-
-.khPopular,.khLatest,.khUtility{
-  margin-top:23px!important;border:1px solid #dce8f5!important;background:#fbfdff!important;
-  border-radius:13px!important;box-shadow:none!important
-}
-.khPopular{padding:16px 13px!important}
-.khChips{gap:13px!important;flex-wrap:nowrap!important}
-.khChips button{
-  height:43px!important;flex:1 1 0!important;min-width:0!important;border-radius:24px!important;
-  background:#fff!important;border:1px solid #a9c8f0!important;color:#1459c5!important;font-size:14px!important
-}
-.khLatest{padding:18px 13px!important}
-.khLatestGrid{grid-template-columns:repeat(4,1fr)!important;gap:15px!important}
-.khLatestGrid article{
-  min-height:235px!important;border:1px solid #dce8f5!important;border-radius:11px!important;
-  box-shadow:0 2px 8px rgba(34,82,140,.05)!important;padding:17px 12px!important
-}
-.khLatestGrid article>b{font-size:18px!important;color:#143f78!important}
-.khLatestGrid article p{font-size:14px!important;color:#647c9e!important}
-.khLatestGrid article>span{
-  background:#e9f3ff!important;color:#295b91!important;padding:8px 12px!important;font-size:12px!important
-}
-.khLatestGrid article div{gap:7px!important;margin-top:17px!important}
-.khLatestGrid button{height:38px!important;font-size:11px!important}
-.khUtility{
-  min-height:108px!important;padding:9px 5px!important;
-  display:grid!important;grid-template-columns:repeat(5,1fr)!important
-}
-.khUtility button{border-left:1px solid #dce5f0!important;color:#143f79!important}
-.khUtility button:last-child{border-left:0!important}
-.khUtility span{font-size:27px!important}
-.khUtility b{font-size:15px!important}
-.khUtility .khContact{height:56px!important;margin:12px!important;border-radius:30px!important;background:#ff7727!important}
-
-#khiroBottomNav.khExactBottom{
-  position:fixed!important;left:0!important;right:0!important;bottom:0!important;z-index:99999!important;
-  height:92px!important;border:0!important;border-top:1px solid #dce6f2!important;border-radius:0!important;
-  background:rgba(255,255,255,.98)!important;box-shadow:0 -5px 18px rgba(20,62,110,.08)!important;
-  display:grid!important;grid-template-columns:repeat(5,1fr)!important;padding:5px 30px 4px!important
-}
-#khiroBottomNav.khExactBottom button{
-  position:relative!important;border:0!important;border-left:1px solid #e1e8f1!important;border-radius:0!important;
-  background:transparent!important;color:#183f78!important;box-shadow:none!important;font:inherit!important;
-  font-size:15px!important;font-weight:700!important;display:flex!important;flex-direction:column!important;
-  align-items:center!important;justify-content:center!important;gap:3px!important;cursor:pointer
-}
-#khiroBottomNav.khExactBottom button:last-child{border-left:0!important}
-#khiroBottomNav.khExactBottom button.active{color:#1464d4!important}
-#khiroBottomNav.khExactBottom .k4ico{font-size:34px!important;line-height:1!important;font-weight:300!important}
-#khiroBottomNav.khExactBottom .k4ico i{
-  position:absolute;top:7px;margin-right:24px;background:#ff7427;color:#fff;border-radius:50%;
-  min-width:25px;height:25px;display:grid;place-items:center;font-style:normal;font-size:11px;border:2px solid #fff
-}
-
-/* Keep the catalog functional, but give it the same light visual language. */
-body.khiroCatalogOpen #khiroHome{display:none!important}
-body.khiroCatalogOpen .siteHeader.khExactHeader{margin-bottom:0}
-body.khiroCatalogOpen main.wrap>.catalogToolbar{display:flex!important;background:#fff!important;color:#153f78!important}
-body.khiroCatalogOpen #screenSection.show,
-body.khiroCatalogOpen #batterySection.show,
-body.khiroCatalogOpen #coverSection.show,
-body.khiroCatalogOpen #chargeSection.show{display:block!important}
-body.khiroCatalogOpen .card{background:#fff!important;color:#173f77!important;border-color:#dbe6f3!important;box-shadow:0 5px 16px rgba(28,77,132,.07)!important}
-body.khiroCatalogOpen .muted{color:#6d809d!important}
-
-@media(max-width:900px){
-  .khHeaderInner{padding:0 14px;grid-template-columns:1fr auto 1fr;gap:8px}
-  .khTopAction{min-width:56px}.khTopIcon{font-size:31px}.khTopAction b{font-size:12px}
-  .khHeaderLogo>div{font-size:29px}.khHeaderLogo small{font-size:11px}
-  .khLogin{height:48px;padding:0 14px;font-size:13px}.khMenu{font-size:12px}.khMenu strong{font-size:27px}
-  #khiroHome{padding:15px 15px 20px!important}
-  .khCategories{grid-template-columns:repeat(4,1fr)!important}
-  .khLatestGrid{grid-template-columns:repeat(2,1fr)!important}
-  .khChips{flex-wrap:wrap!important}
-}
-@media(max-width:560px){
-  body{padding-bottom:76px!important}
-  .siteHeader.khExactHeader{height:83px!important}
-  .khHeaderInner{height:83px!important;padding:0 8px!important}
-  .khHeadLeft{gap:1px!important}
-  .khTopAction{min-width:49px;height:68px}.khTopIcon{font-size:27px}.khTopAction b{font-size:10px}
-  .khHeaderLogo>div{font-size:22px;letter-spacing:-1px}.khHeaderLogo small{font-size:8px;margin-top:5px}
-  .khHeadRight{gap:5px}.khLogin{height:42px;padding:0 10px;font-size:11px}.khLogin strong{font-size:21px}.khMenu{font-size:9px;gap:4px}.khMenu strong{font-size:23px}
-  #khiroHome{padding:12px 8px 18px!important}
-  .khHero{height:224px!important;border-radius:15px!important;padding:20px 9px!important}
-  .khHero h1{font-size:22px!important;text-align:center!important}.khHero p{font-size:13px!important}
-  .khSearchBox{width:96%!important;height:55px!important}.khSearchBox button{height:45px!important;min-width:82px;font-size:14px!important}.khSearchBox input{font-size:12px!important}
-  .khFeatures{height:118px!important;grid-template-columns:repeat(2,1fr)!important;padding:10px 0!important}
-  .khFeature{padding:4px 8px!important;gap:7px!important}.khFeatureIcon{font-size:31px!important}.khFeature b{font-size:12px!important}.khFeature small{font-size:9px!important}
-  .khSection{margin-top:18px!important}.khSectionTitle h2{font-size:19px!important}
-  .khCategories{grid-template-columns:repeat(4,1fr)!important;gap:7px!important}
-  .khCategories button{min-height:122px!important;padding:8px 3px!important}.khCategories span{font-size:31px!important}.khCategories b{font-size:12px!important}.khCategories small{font-size:9px!important}
-  .khPopular,.khLatest,.khUtility{margin-top:15px!important}.khPopular{padding:11px 8px!important}.khChips{gap:6px!important}.khChips button{flex:1 1 30%!important;height:37px!important;font-size:11px!important}
-  .khLatest{padding:12px 8px!important}.khLatestGrid{gap:8px!important}.khLatestGrid article{min-height:230px!important;padding:13px 8px!important}.khLatestGrid article>b{font-size:15px!important}.khLatestGrid article p{font-size:11px!important}.khLatestGrid article div{flex-direction:column!important}.khLatestGrid button{height:34px!important;font-size:10px!important}
-  .khUtility{min-height:91px!important;padding:5px 2px!important}.khUtility span{font-size:22px!important}.khUtility b{font-size:9px!important}.khUtility .khContact{height:45px!important;margin:9px 3px!important}
-  #khiroBottomNav.khExactBottom{height:76px!important;padding:2px 0!important}
-  #khiroBottomNav.khExactBottom button{font-size:10px!important}.khExactBottom .k4ico{font-size:27px!important}
-  #khiroBottomNav.khExactBottom .k4ico i{top:1px;margin-right:18px;min-width:20px;height:20px;font-size:9px}
-}
-</style>
-
-<script id="khiro-exact-reference-sync">
-(function(){
-  function syncExactCounts(){
-    var n=0;
-    try{ if(Array.isArray(window.basket)) n=window.basket.reduce(function(s,x){return s+(Number(x.q)||0)},0); }catch(e){}
-    ['khTopCartCount','khBottomCartCount'].forEach(function(id){
-      var el=document.getElementById(id); if(el) el.textContent=n;
-    });
-  }
-  var oldUpdate=window.updateCount;
-  if(typeof oldUpdate==='function'){
-    window.updateCount=function(){var r=oldUpdate.apply(this,arguments);syncExactCounts();return r;};
-  }
-  document.addEventListener('DOMContentLoaded',syncExactCounts);
-  setInterval(syncExactCounts,700);
-
-  window.khiroHomeSearch=function(q){
-    var input=document.getElementById('khHomeSearch');
-    if(input && q!==undefined) input.value=q;
-    var value=input ? input.value.trim() : '';
-    var main=document.getElementById('search');
-    if(main){
-      main.value=value;
-      main.dispatchEvent(new Event('input',{bubbles:true}));
-      main.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter',bubbles:true}));
-    }
-    window.scrollTo({top:0,behavior:'smooth'});
-  };
-  window.khiroQuickSearch=function(q){window.khiroHomeSearch(q)};
 })();
 </script>
 
