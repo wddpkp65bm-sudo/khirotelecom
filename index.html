@@ -110,6 +110,10 @@ nav .chip{border-radius:999px;padding:9px 14px;background:rgba(15,27,46,.75);bor
 #favoritesFab,#installFab{border:1px solid rgba(148,163,184,.18);background:rgba(9,19,33,.90);backdrop-filter:blur(16px);box-shadow:0 12px 35px rgba(0,0,0,.28);border-radius:999px;padding:11px 15px;font-weight:900;transition:.18s}#favoritesFab:hover,#installFab:hover{transform:translateY(-2px);border-color:rgba(96,165,250,.5)}
 footer{margin-top:40px;padding:28px 16px!important;border-top:1px solid rgba(148,163,184,.10)!important;background:rgba(3,8,15,.35)}
 @media(max-width:600px){.catalogToolbar{border-radius:18px}.card{border-radius:18px}.picWrap{height:190px}.body{padding:13px}.productTools .btn{min-height:36px}.sheet{margin:10px!important;border-radius:20px!important}}
+/* Auth modals must stay above the fixed bottom navigation */
+.modal.show{z-index:1000000!important}
+#pinModal .sheet,#wholesalePinModal .sheet{position:relative;z-index:1000001!important;margin-bottom:88px;max-height:calc(100vh - 110px);padding-bottom:24px}
+#pinModal .btn.primary,#wholesalePinModal .btn.primary{display:block!important;visibility:visible!important;position:relative;z-index:1000002!important;min-height:48px}
 </style>
 
 <style>
