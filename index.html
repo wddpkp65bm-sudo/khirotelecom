@@ -895,11 +895,18 @@ function priceView(p){
   const d=discountFor(p),price=discountedPrice(p);return d?'<div class="price"><del class="oldPrice">'+money(displayPrice(p))+'</del> '+money(price)+' <small class="discountBadge">-'+d+'%</small></div>':'<div class="price">'+money(price)+'</div>';
 }
 function askPrice(type,i){
-  const p=type==="b"?batteries[i]:type==="c"?covers[i]:type==="h"?charges[i]:data[i];
-  if(!p||!priceUnset(p))return;
-  const kind=type==="b"?"بطارية":type==="c"?"كوفر":"ناب شارج";
-  const msg=`السلام عليكم ${settings.name}، أريد معرفة سعر ${kind}:\nالماركة: ${p[0]}\nالموديل: ${p[1]}\nالنوع: ${p[2]}`;
+  const maps={
+    s:{list:data,kind:"شاشة"},
+    b:{list:batteries,kind:"بطارية"},
+    c:{list:covers,kind:"كوفر"},
+    h:{list:charges,kind:"ناب شارج"}
+  };
+  const m=maps[type];
+  const p=m&&m.list?m.list[i]:null;
+  if(!m||!p||!priceUnset(p))return;
+  const msg=`السلام عليكم ${settings.name}، أريد معرفة سعر ${m.kind}:\nالماركة: ${p[0]}\nالموديل: ${p[1]}\nالنوع: ${p[2]||"غير محدد"}`;
   const phone=String(settings.whatsapp).replace(/\D/g,"");
+  if(!phone){toast("رقم WhatsApp غير مضبوط في الإعدادات.","error");return}
   window.open("https://wa.me/"+phone+"?text="+encodeURIComponent(msg),"_blank");
 }
 function priceLabel(){return priceMode==="wholesale"?"سعر الجملة":"سعر التجزئة"}
@@ -1198,12 +1205,12 @@ function productHasMeaningfulPrice(p){return Number(p?.[3]||0)>0}
 function saveScreenProduct(){const p=[f("fbrand"),f("fmodel"),f("fkind")||"Standard",Number(f("fprice")),null,f("fimage")||null];if(!p[0]||!p[1]||Number.isNaN(p[3])||p[3]<0)return alert("أدخل الماركة والموديل والسعر بشكل صحيح.");if(duplicateProduct(data,p,currentScreenEdit))return alert("هذا المنتج موجود مسبقاً بنفس الماركة والموديل والنوع.");if(currentScreenEdit>=0)data[currentScreenEdit]=p;else data.push(p);const editing=currentScreenEdit>=0;saveAll();cancelScreenEdit();brandsUI();renderScreens();renderAdminTables();alert(editing?"تم تعديل الشاشة.":"تمت إضافة الشاشة.")}
 function editScreen(i){const p=data[i];currentScreenEdit=i;document.getElementById("fbrand").value=p[0]||"";document.getElementById("fmodel").value=p[1]||"";document.getElementById("fkind").value=p[2]||"";document.getElementById("fprice").value=p[3]||"";document.getElementById("fimage").value=p[5]||p[4]||"";document.getElementById("screenSaveBtn").textContent="💾 حفظ تعديل الشاشة";window.scrollTo({top:document.getElementById("adminSection").offsetTop,behavior:"smooth"})}
 function cancelScreenEdit(){currentScreenEdit=-1;["fbrand","fmodel","fkind","fimage"].forEach(id=>document.getElementById(id).value="");document.getElementById("fprice").value="0";document.getElementById("screenSaveBtn").textContent="+ إضافة شاشة"}
-function deleteScreen(i){if(confirm("حذف هذه الشاشة؟")){data.splice(i,1);saveAll();renderScreens()}}
+function deleteScreen(i){if(confirm("حذف هذه الشاشة؟")){data.splice(i,1);saveAll();renderScreens();renderAdminTables();if(window.refreshKhiroAdminDash)window.refreshKhiroAdminDash()}}
 
 function saveBatteryProduct(){const p=[f("fbbrand"),f("fbmodel"),"بطارية",Number(f("fbprice")),f("fbimage")||null];if(!p[0]||!p[1]||Number.isNaN(p[3])||p[3]<0)return alert("أدخل الماركة والموديل والسعر بشكل صحيح.");if(duplicateProduct(batteries,p,currentBatteryEdit))return alert("هذه البطارية موجودة مسبقاً بنفس الماركة والموديل.");const editing=currentBatteryEdit>=0;if(editing)batteries[currentBatteryEdit]=p;else batteries.push(p);saveAll();cancelBatteryEdit();renderBatteries();renderAdminTables();alert(editing?"تم تعديل البطارية.":"تمت إضافة البطارية.")}
 function editBattery(i){const p=batteries[i];currentBatteryEdit=i;document.getElementById("fbbrand").value=p[0]||"";document.getElementById("fbmodel").value=p[1]||"";document.getElementById("fbprice").value=p[3]||"";document.getElementById("fbimage").value=p[4]||"";document.getElementById("batterySaveBtn").textContent="💾 حفظ تعديل البطارية";window.scrollTo({top:document.getElementById("adminSection").offsetTop,behavior:"smooth"})}
 function cancelBatteryEdit(){currentBatteryEdit=-1;["fbbrand","fbmodel","fbimage"].forEach(id=>document.getElementById(id).value="");document.getElementById("fbprice").value="0";document.getElementById("batterySaveBtn").textContent="+ إضافة بطارية"}
-function deleteBattery(i){if(confirm("حذف هذه البطارية؟")){batteries.splice(i,1);saveAll();renderBatteries()}}
+function deleteBattery(i){if(confirm("حذف هذه البطارية؟")){batteries.splice(i,1);saveAll();renderBatteries();renderAdminTables();if(window.refreshKhiroAdminDash)window.refreshKhiroAdminDash()}}
 
 function saveCoverProduct(){
   const p=[f("fcbrand"),f("fcmodel"),f("fctype")||"Coque / Cover",Number(f("fcprice")),f("fcimage")||null];
@@ -1214,7 +1221,7 @@ function saveCoverProduct(){
 }
 function editCover(i){const p=covers[i];currentCoverEdit=i;document.getElementById("fcbrand").value=p[0]||"";document.getElementById("fcmodel").value=p[1]||"";document.getElementById("fctype").value=p[2]||"";document.getElementById("fcprice").value=p[3]||"";document.getElementById("fcimage").value=p[4]||"";document.getElementById("coverSaveBtn").textContent="💾 حفظ تعديل الكوفر"}
 function cancelCoverEdit(){currentCoverEdit=-1;["fcbrand","fcmodel","fctype","fcimage"].forEach(id=>document.getElementById(id).value="");document.getElementById("fcprice").value="0";document.getElementById("coverSaveBtn").textContent="+ إضافة كوفر"}
-function deleteCover(i){if(confirm("حذف هذا الكوفر؟")){covers.splice(i,1);saveAll();renderCovers();renderAdminTables()}}
+function deleteCover(i){if(confirm("حذف هذا الكوفر؟")){covers.splice(i,1);saveAll();renderCovers();renderAdminTables();if(window.refreshKhiroAdminDash)window.refreshKhiroAdminDash()}}
 
 function saveChargeProduct(){
   const p=[f("fchbrand"),f("fchmodel"),f("fchtype")||"Nappe de charge",Number(f("fchprice")),f("fchimage")||null];
@@ -1225,7 +1232,7 @@ function saveChargeProduct(){
 }
 function editCharge(i){const p=charges[i];currentChargeEdit=i;document.getElementById("fchbrand").value=p[0]||"";document.getElementById("fchmodel").value=p[1]||"";document.getElementById("fchtype").value=p[2]||"";document.getElementById("fchprice").value=p[3]||"";document.getElementById("fchimage").value=p[4]||"";document.getElementById("chargeSaveBtn").textContent="💾 حفظ تعديل ناب الشارج"}
 function cancelChargeEdit(){currentChargeEdit=-1;["fchbrand","fchmodel","fchtype","fchimage"].forEach(id=>document.getElementById(id).value="");document.getElementById("fchprice").value="0";document.getElementById("chargeSaveBtn").textContent="+ إضافة ناب شارج"}
-function deleteCharge(i){if(confirm("حذف هذا ناب الشارج؟")){charges.splice(i,1);saveAll();renderCharges();renderAdminTables()}}
+function deleteCharge(i){if(confirm("حذف هذا ناب الشارج؟")){charges.splice(i,1);saveAll();renderCharges();renderAdminTables();if(window.refreshKhiroAdminDash)window.refreshKhiroAdminDash()}}
 
 function saveSettings(){
   settings.name=f("sName")||DEFAULT_SETTINGS.name;
@@ -1246,8 +1253,8 @@ function renderAdminTables(){
 }
 
 function exportBackup(){const payload={data,batteries,covers,charges,settings,createdAt:new Date().toISOString()};const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="KHIRO-TELECOM-backup.json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
-function importBackup(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const x=JSON.parse(reader.result);if(!Array.isArray(x.data)||!Array.isArray(x.batteries))throw new Error();data=x.data;batteries=x.batteries;covers=Array.isArray(x.covers)?x.covers:[];charges=Array.isArray(x.charges)?x.charges:[];settings={...DEFAULT_SETTINGS,...(x.settings||{})};saveAll();applySettings();brandsUI();renderScreens();renderBatteries();toast("تم استرجاع النسخة الاحتياطية","success")}catch(err){alert("الملف غير صالح.")}};reader.readAsText(file);e.target.value=""}
-function resetAll(){if(!confirm("سيتم حذف تعديلاتك المحلية وإرجاع القوائم الأصلية + آخر تحديث. هل أنت متأكد؟"))return;data=clone(SCREEN_DEFAULTS).concat(clone(NEW_SCREEN_DEFAULTS));batteries=clone(BATTERY_DEFAULTS).concat(clone(NEW_BATTERY_DEFAULTS));covers=clone(COVER_DEFAULTS);charges=clone(CHARGE_DEFAULTS);settings={...DEFAULT_SETTINGS};basket=[];priceMode="retail";saveAll();applySettings();brandsUI();renderScreens();renderBatteries();toast("تم إرجاع البيانات الأصلية + آخر تحديث","success")}
+function importBackup(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const x=JSON.parse(reader.result);if(!Array.isArray(x.data)||!Array.isArray(x.batteries))throw new Error();data=x.data;batteries=x.batteries;covers=Array.isArray(x.covers)?x.covers:[];charges=Array.isArray(x.charges)?x.charges:[];settings={...DEFAULT_SETTINGS,...(x.settings||{})};saveAll();applySettings();brandsUI();renderScreens();renderBatteries();renderCovers();renderCharges();renderAdminTables();if(window.refreshKhiroAdminDash)window.refreshKhiroAdminDash();toast("تم استرجاع النسخة الاحتياطية","success")}catch(err){alert("الملف غير صالح.")}};reader.readAsText(file);e.target.value=""}
+function resetAll(){if(!confirm("سيتم حذف تعديلاتك المحلية وإرجاع القوائم الأصلية + آخر تحديث. هل أنت متأكد؟"))return;data=clone(SCREEN_DEFAULTS).concat(clone(NEW_SCREEN_DEFAULTS));batteries=clone(BATTERY_DEFAULTS).concat(clone(NEW_BATTERY_DEFAULTS));covers=clone(COVER_DEFAULTS);charges=clone(CHARGE_DEFAULTS);settings={...DEFAULT_SETTINGS};basket=[];priceMode="retail";saveAll();applySettings();brandsUI();renderScreens();renderBatteries();renderCovers();renderCharges();renderAdminTables();if(window.refreshKhiroAdminDash)window.refreshKhiroAdminDash();toast("تم إرجاع البيانات الأصلية + آخر تحديث","success")}
 
 applySettings();brandsUI();renderScreens();renderBatteries();
 </script>
@@ -1323,7 +1330,7 @@ function openProductModal(type,i){
 (function(){
   function getCart(){
     try{
-      const raw=localStorage.getItem("cart");
+      const raw=localStorage.getItem("kgp_cart");
       const c=raw?JSON.parse(raw):[];
       return Array.isArray(c)?c:[];
     }catch(e){return []}
@@ -1332,17 +1339,19 @@ function openProductModal(type,i){
   window.showKhiroBon=function(){
     const cart=getCart();
     if(!cart.length){ alert("السلة فارغة. أضف منتجات أولاً."); return; }
-    const items=cart.map((p,i)=>{
-      const qty=Number(p.qty||p.quantity||1);
-      const price=Number(p.price||p.retailPrice||p.wholesalePrice||0);
+    const items=cart.map((x,i)=>{
+      const p=getProduct(x);
+      if(!p)return null;
+      const qty=Number(x.q||1);
+      const price=Number(discountedPrice(p)||0);
       return {p,qty,price,total:qty*price};
-    });
+    }).filter(Boolean);
     const total=items.reduce((s,x)=>s+x.total,0);
     document.getElementById("khiroInvoiceMeta").innerHTML =
       "التاريخ: "+new Date().toLocaleString("fr-DZ")+"<br>عدد المنتجات: "+items.length;
     document.getElementById("khiroInvoiceItems").innerHTML=items.map((x,i)=>`
       <div style="display:flex;justify-content:space-between;gap:8px;padding:9px 0;border-bottom:1px solid #eee">
-        <div><b>${i+1}. ${String(x.p.model||x.p.name||x.p.title||"Produit").replace(/[<>]/g,"")}</b><br>
+        <div><b>${i+1}. ${String(x.p[0]+" — "+x.p[1]).replace(/[<>]/g,"")}</b><br>
         <small>${x.qty} × ${money(x.price)}</small></div>
         <b>${money(x.total)}</b>
       </div>`).join("");
@@ -1380,10 +1389,11 @@ function openProductModal(type,i){
   function cart(){
     try{const x=JSON.parse(localStorage.getItem("cart")||"[]");return Array.isArray(x)?x:[]}catch(e){return[]}
   }
-  function total(c){return c.reduce((s,p)=>s+(Number(p.price||p.retailPrice||p.wholesalePrice||0)*Number(p.qty||p.quantity||1)),0)}
+  function total(c){return c.reduce((s,x)=>{const p=getProduct(x);return s+(p?Number(discountedPrice(p)||0)*Number(x.q||1):0)},0)}
   window.saveKhiroOrder=function(){
     const c=cart(); if(!c.length)return;
-    const snapshot=c.map(p=>({model:p.model||p.name||p.title||"Produit",qty:Number(p.qty||p.quantity||1),price:Number(p.price||p.retailPrice||p.wholesalePrice||0)}));
+    const snapshot=c.map(x=>{const p=getProduct(x);return p?{model:p[0]+" — "+p[1],type:p[2]||"",qty:Number(x.q||1),price:Number(discountedPrice(p)||0)}:null}).filter(Boolean);
+    if(!snapshot.length)return;
     const h=load();
     h.unshift({id:Date.now(),date:new Date().toISOString(),items:snapshot,total:total(c)});
     save(h.slice(0,50));
@@ -1413,7 +1423,7 @@ function openProductModal(type,i){
     const b=e.target.closest("button,a");
     if(!b)return;
     const t=(b.textContent||"").toLowerCase();
-    if(t.includes("whatsapp")||t.includes("واتساب")||t.includes("طلب")) {
+    if(b.id==="order" || t.includes("إرسال الطلب عبر whatsapp") || t.includes("إرسال الطلب عبر واتساب")) {
       try{ if(window.saveKhiroOrder) window.saveKhiroOrder(); }catch(_){}
     }
   },true);
@@ -1439,4 +1449,75 @@ function openProductModal(type,i){
   </button>
 </nav>
 
+
+<style id="khiro-v9-enhancements">
+#khiroAccountFab{position:fixed;left:14px;bottom:88px;z-index:99991;border:0;border-radius:16px;padding:10px 13px;background:#111827;color:#fff;font-weight:900;box-shadow:0 8px 25px #0002;cursor:pointer}
+#khiroAccountFab small{display:block;font-size:9px;opacity:.7;margin-top:2px}
+#khiroSmartBox{position:absolute;left:0;right:0;top:calc(100% + 7px);z-index:9998;background:#fff;border:1px solid #e6e1d9;border-radius:16px;box-shadow:0 18px 45px #0002;overflow:hidden;display:none;color:#111}
+#khiroSmartBox .srow{padding:11px 13px;border-bottom:1px solid #eee;cursor:pointer;display:flex;justify-content:space-between;gap:8px}
+#khiroSmartBox .srow:last-child{border-bottom:0}.khirow{display:flex;gap:8px;align-items:center}.khirow b{font-size:13px}.khirow span{font-size:11px;color:#777}
+#khiroAdminDash{margin:15px 0;padding:16px;border:1px solid rgba(37,99,235,.2);border-radius:20px;background:linear-gradient(145deg,#081a30,#0b1320);color:#fff}
+.khiStats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.khiStat{padding:13px;border-radius:15px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08)}.khiStat b{display:block;font-size:22px;color:#ffd21a}.khiStat span{font-size:11px;color:#aebbd0}
+#khiroInvoiceCustomer{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}#khiroInvoiceCustomer input{background:#fafafa;color:#111;border:1px solid #ddd;border-radius:10px;padding:9px}
+@media(max-width:600px){.khiStats{grid-template-columns:repeat(2,1fr)}#khiroInvoiceCustomer{grid-template-columns:1fr}#khiroAccountFab{bottom:86px;left:8px}}
+</style>
+<script id="khiro-v10-fixes">
+(function(){
+  const ACCOUNT='khiro_customer_account_v1';
+  function esc2(x){return String(x||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+  function getAccount(){try{return JSON.parse(localStorage.getItem(ACCOUNT)||'null')||{}}catch(e){return {}}}
+  function setAccount(x){localStorage.setItem(ACCOUNT,JSON.stringify(x));updateAccountButton();fillCustomerFields()}
+  function updateAccountButton(){const b=document.getElementById('khiroAccountFab');if(!b)return;const a=getAccount();b.innerHTML=(a.name?'👤 '+esc2(a.name):'👤 حسابي')+'<small>'+(a.name?'ملف الزبون محفوظ':'حفظ بياناتك للطلبات')+'</small>'}
+  function fillCustomerFields(){const a=getAccount();const n=document.getElementById('customerName'),ph=document.getElementById('customerPhone'),loc=document.getElementById('customerLocation');if(n&&!n.value)n.value=a.name||'';if(ph&&!ph.value)ph.value=a.phone||'';if(loc&&!loc.value)loc.value=a.address||'';if(typeof renderCart==='function'&&document.getElementById('cart'))try{renderCart()}catch(e){}}
+  window.openKhiroAccount=function(){
+    const a=getAccount();const old=document.getElementById('khiroAccountModal');if(old)old.remove();
+    document.body.insertAdjacentHTML('beforeend',`<div id="khiroAccountModal" class="modal show" onclick="if(event.target===this)this.remove()"><div class="sheet" style="max-width:520px"><div class="top"><h2>👤 حساب الزبون</h2><button class="btn" onclick="this.closest('.modal').remove()">إغلاق</button></div><p class="muted">احفظ اسمك ورقمك وعنوانك لتسهيل الطلبات والفاتورة على هذا الجهاز.</p><div class="form"><input id="kaccName" value="${esc2(a.name)}" placeholder="الاسم / اسم المحل"><input id="kaccPhone" value="${esc2(a.phone)}" placeholder="رقم الهاتف"><input id="kaccAddress" value="${esc2(a.address)}" placeholder="العنوان (اختياري)"></div><button class="btn primary" style="width:100%;margin-top:10px" onclick="saveKhiroAccount()">💾 حفظ الحساب</button>${a.name?'<button class="btn danger" style="width:100%;margin-top:8px" onclick="clearKhiroAccount()">مسح بيانات الحساب</button>':''}</div></div>`);
+  };
+  window.saveKhiroAccount=function(){setAccount({name:document.getElementById('kaccName').value.trim(),phone:document.getElementById('kaccPhone').value.trim(),address:document.getElementById('kaccAddress').value.trim()});document.getElementById('khiroAccountModal')?.remove();toast('تم حفظ حساب الزبون على هذا الجهاز','success')};
+  window.clearKhiroAccount=function(){localStorage.removeItem(ACCOUNT);updateAccountButton();fillCustomerFields();document.getElementById('khiroAccountModal')?.remove();toast('تم مسح بيانات الحساب','success')};
+  window.updateKhiroAccountButton=updateAccountButton;window.fillKhiroCustomerFields=fillCustomerFields;
+  function initAccount(){if(!document.getElementById('khiroAccountFab'))document.body.insertAdjacentHTML('beforeend','<button id="khiroAccountFab" onclick="openKhiroAccount()"></button>');updateAccountButton();fillCustomerFields()}
+
+  function initSmartSearch(){
+    const input=document.getElementById('search');if(!input||document.getElementById('khiroSmartBox'))return;
+    const wrap=input.parentElement;if(getComputedStyle(wrap).position==='static')wrap.style.position='relative';
+    wrap.insertAdjacentHTML('beforeend','<div id="khiroSmartBox"></div>');const box=document.getElementById('khiroSmartBox');
+    input.addEventListener('input',function(){
+      const q=this.value.trim();if(q.length<2){box.style.display='none';return}
+      const all=[];
+      [[data,'screens','s'],[batteries,'batteries','b'],[covers,'covers','c'],[charges,'charges','h']].forEach(([arr,t])=>{if(Array.isArray(arr))arr.forEach((p,i)=>all.push({t,i,p}))});
+      const nq=norm(q);const tokens=expandedSearch(q);
+      const hits=all.filter(x=>{const text=norm((x.p||[]).slice(0,4).join(' '));return tokens.every(tok=>text.includes(tok))||text.includes(nq)}).slice(0,7);
+      if(!hits.length){box.innerHTML='<div class="srow"><span>🔎 لا توجد مطابقة — جرّب رقم الموديل أو اسم الماركة</span></div>'}
+      else box.innerHTML=hits.map(x=>{const p=x.p;const name=(p[0]||'')+' — '+(p[1]||'');const label={screens:'شاشة',batteries:'بطارية',covers:'كوفر',charges:'ناب شارج'}[x.t];return `<div class="srow" onclick="window.khiroSmartPick('${x.t}',${x.i})"><div class="khirow"><b>${esc2(name)}</b><span>${label}</span></div><b>›</b></div>`}).join('');
+      box.style.display='block';
+    });
+    document.addEventListener('click',e=>{if(!wrap.contains(e.target))box.style.display='none'});
+  }
+  window.khiroSmartPick=function(t,i){const which=t==='screens'?'screens':t;showCatalog(which);const input=document.getElementById('search');const arr=t==='screens'?data:t==='batteries'?batteries:t==='covers'?covers:charges;const p=arr[i];if(input&&p){input.value=p[1]||p[0]||'';input.dispatchEvent(new Event('input',{bubbles:true}))}document.getElementById('khiroSmartBox')?.style.setProperty('display','none')};
+
+  function enhanceInvoice(){
+    const paper=document.getElementById('khiroInvoicePaper');if(!paper||document.getElementById('khiroInvoiceCustomer'))return;
+    const meta=document.getElementById('khiroInvoiceMeta');const a=getAccount();
+    meta.insertAdjacentHTML('afterend','<div id="khiroInvoiceCustomer"><input id="kInvName" placeholder="اسم الزبون" value="'+esc2(a.name)+'"><input id="kInvPhone" placeholder="الهاتف" value="'+esc2(a.phone)+'"></div>');
+    const oldShow=window.showKhiroBon;window.showKhiroBon=function(){if(oldShow)oldShow();setTimeout(()=>{const a=getAccount(),n=document.getElementById('kInvName'),ph=document.getElementById('kInvPhone');if(n&&!n.value)n.value=a.name||'';if(ph&&!ph.value)ph.value=a.phone||''},30)};
+    const oldPrint=window.printKhiroInvoice;window.printKhiroInvoice=function(){
+      const cust=document.getElementById('khiroInvoiceCustomer');const n=document.getElementById('kInvName')?.value.trim()||'غير محدد';const ph=document.getElementById('kInvPhone')?.value.trim()||'غير محدد';
+      if(cust){const old=cust.innerHTML;cust.innerHTML='<div style="grid-column:1/-1;border:1px solid #ddd;border-radius:10px;padding:9px;color:#111;background:#fafafa"><b>الزبون:</b> '+esc2(n)+'<br><b>الهاتف:</b> '+esc2(ph)+'</div>';try{oldPrint()}finally{}}
+    };
+  }
+
+  function adminDashboard(){
+    const sec=document.getElementById('adminSection');if(!sec||document.getElementById('khiroAdminDash'))return;const panel=sec.querySelector('.panel');if(!panel)return;
+    panel.insertAdjacentHTML('afterbegin','<div id="khiroAdminDash"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><div><h3 style="margin:0">📊 لوحة المعلومات</h3><small style="color:#9fb0c5">ملخص سريع للمخزون والطلبات والحسابات على هذا الجهاز</small></div><button class="btn" onclick="refreshKhiroAdminDash()">↻ تحديث</button></div><div class="khiStats" style="margin-top:12px"><div class="khiStat"><b id="ksOrders">0</b><span>الطلبات المحفوظة</span></div><div class="khiStat"><b id="ksValue">0</b><span>قيمة الطلبات</span></div><div class="khiStat"><b id="ksProducts">0</b><span>المنتجات</span></div><div class="khiStat"><b id="ksCustomers">0</b><span>حساب الزبون</span></div></div></div>');refreshKhiroAdminDash()
+  }
+  window.refreshKhiroAdminDash=function(){
+    let h=[];try{h=JSON.parse(localStorage.getItem('khiro_order_history')||'[]')}catch(e){}
+    const val=h.reduce((s,x)=>s+Number(x.total||0),0);const products=[data,batteries,covers,charges].reduce((s,a)=>s+(Array.isArray(a)?a.length:0),0);const a=getAccount();
+    if(document.getElementById('ksOrders'))document.getElementById('ksOrders').textContent=h.length;if(document.getElementById('ksValue'))document.getElementById('ksValue').textContent=(val||0).toLocaleString('fr-DZ')+' DA';if(document.getElementById('ksProducts'))document.getElementById('ksProducts').textContent=products;if(document.getElementById('ksCustomers'))document.getElementById('ksCustomers').textContent=a&&a.name?'1':'0';
+  };
+  document.addEventListener('DOMContentLoaded',()=>{initAccount();initSmartSearch();enhanceInvoice();adminDashboard()});
+  setTimeout(()=>{initAccount();initSmartSearch();enhanceInvoice();adminDashboard()},800);
+})();
+</script>
 </body></html>
