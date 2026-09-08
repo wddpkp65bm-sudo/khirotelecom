@@ -106,6 +106,36 @@ body:before{content:"";position:fixed;inset:0;pointer-events:none;background-ima
 .serviceActions .btn{
   min-width:120px;
 }
+
+/* Temporary update lock */
+#updateLock{
+  position:fixed;inset:0;z-index:999999;
+  display:flex;align-items:center;justify-content:center;
+  padding:24px;background:rgba(8,11,18,.98);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+}
+#updateLock .update-box{
+  width:min(420px,100%);text-align:center;
+  background:#111621;border:1px solid #2a3242;border-radius:24px;
+  padding:28px 20px;box-shadow:0 20px 60px #0009;
+}
+#updateLock .update-icon{font-size:42px;margin-bottom:10px}
+#updateLock h2{margin:0 0 8px;font-size:25px;color:#fff}
+#updateLock p{margin:6px 0;color:#aab3c2;font-size:14px}
+#updateLock .developer{color:#f28a16;font-weight:700;margin-top:10px}
+#updateLock input{
+  display:block;width:100%;margin-top:20px;padding:14px 16px;
+  border:1px solid #30394c;border-radius:14px;background:#080c14;
+  color:#fff;font-size:16px;text-align:center;outline:none;
+}
+#updateLock input:focus{border-color:#f28a16}
+#updateLock button{
+  width:100%;margin-top:10px;background:linear-gradient(135deg,#f28a16,#ffb347);
+  color:#fff;border:0;border-radius:14px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;
+}
+#updateLock .error{min-height:20px;margin-top:10px;color:#ff6b6b;font-size:13px}
+body.update-locked{overflow:hidden}
+
 </style>
 
 <style>
@@ -673,6 +703,20 @@ footer{
 </style>
 </head>
 <body>
+
+<div id="updateLock" role="dialog" aria-modal="true" aria-labelledby="updateTitle">
+  <div class="update-box">
+    <div class="update-icon">🔧</div>
+    <h2 id="updateTitle">يتم تحديث التطبيق</h2>
+    <p>التطبيق قيد التحديث حالياً.</p>
+    <p class="developer">المبرمج محمد حراشي</p>
+    <input id="updatePassword" type="password" inputmode="numeric" autocomplete="off"
+           placeholder="أدخل كلمة السر" aria-label="كلمة السر">
+    <button id="updateUnlock" type="button">دخول</button>
+    <div id="updateError" class="error" aria-live="polite"></div>
+  </div>
+</div>
+
 
 <header class="siteHeader"><div class="wrap headWrap">
   <div class="headActions">
@@ -1520,4 +1564,33 @@ function openProductModal(type,i){
   setTimeout(()=>{initAccount();initSmartSearch();enhanceInvoice();adminDashboard()},800);
 })();
 </script>
+
+<script>
+/* Temporary password gate: password = 2003 */
+(function(){
+  const lock=document.getElementById('updateLock');
+  const pass=document.getElementById('updatePassword');
+  const btn=document.getElementById('updateUnlock');
+  const error=document.getElementById('updateError');
+  document.body.classList.add('update-locked');
+
+  function unlock(){
+    if(pass.value === '2003'){
+      lock.style.display='none';
+      document.body.classList.remove('update-locked');
+      error.textContent='';
+      pass.value='';
+    }else{
+      error.textContent='كلمة السر غير صحيحة.';
+      pass.select();
+    }
+  }
+  btn.addEventListener('click',unlock);
+  pass.addEventListener('keydown',function(e){
+    if(e.key==='Enter') unlock();
+  });
+  setTimeout(function(){pass.focus();},100);
+})();
+</script>
+
 </body></html>
