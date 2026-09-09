@@ -1,3 +1,4 @@
+<!-- KHIRO TELECOM AUDIT V11: duplicate-ID, cart-history-key, and catalog-title fixes applied. -->
 <!-- Corrected from index(6)-search-fixed: wholesale/retail logic preserved. -->
 <!doctype html>
 <html lang="ar" dir="rtl">
@@ -758,7 +759,7 @@ footer{
   <button class="btn compactAction" onclick="openComplaint()">💬 شكوى</button>
   <button class="btn compactAction" onclick="openThanks()">⭐ تقييم</button>
 </div>
-<div class="catalogHeading"><h2 id="catalogTitle">الشاشات <span class="sectionIcon">🖥️</span> <span class="muted" id="screenCount"></span></h2></div>
+<div class="catalogHeading"><h2 id="catalogTitle">الشاشات <span class="sectionIcon">🖥️</span></h2></div>
 <section id="screenSection" class="section show"><section id="products" class="grid"></section></section>
 
 <section id="batterySection" class="section"><div class="panel">
@@ -993,7 +994,25 @@ function showCatalog(which){
   const target={screens:"screenSection",batteries:"batterySection",covers:"coverSection",charges:"chargeSection"}[which]||"screenSection";
   document.getElementById(target).classList.add("show");setActiveTab(which);
   const titles={screens:"📱 الشاشات",batteries:"🔋 البطاريات",covers:"📱 الكوفرات",charges:"🔌 ناب شارج"};
-  document.getElementById("catalogTitle").innerHTML=titles[which]+' <span class="muted" id="screenCount"></span>'+ (priceMode==="wholesale"?' <button class="btn" onclick="exitWholesale()" style="margin-right:8px">🔓 خروج من الجملة</button>':'');
+  const ct=document.getElementById("catalogTitle");
+  if(ct){
+    ct.innerHTML="";
+    const titleSpan=document.createElement("span");
+    titleSpan.textContent=titles[which];
+    ct.appendChild(titleSpan);
+    const countSpan=document.createElement("span");
+    countSpan.className="muted";
+    countSpan.id="screenCount";
+    ct.appendChild(countSpan);
+    if(priceMode==="wholesale"){
+      const exit=document.createElement("button");
+      exit.className="btn";
+      exit.style.marginRight="8px";
+      exit.textContent="🔓 خروج من الجملة";
+      exit.onclick=exitWholesale;
+      ct.appendChild(exit);
+    }
+  }
   if(which==="screens")renderScreens();else if(which==="batteries")renderBatteries();else if(which==="covers")renderCovers();else renderCharges();
   window.scrollTo({top:0,behavior:"smooth"})
 }
@@ -1139,7 +1158,11 @@ function applyCustomerLanguage(){
   if(help)help.textContent=t.searchHelp;
 
   const actions=document.querySelectorAll(".headActions .btn");
-  if(actions[0])actions[0].innerHTML=t.cart+' <span id="cartCount" class="countPill">0</span>';
+  if(actions[0]){
+    actions[0].childNodes[0].textContent=t.cart+" ";
+    const cc=actions[0].querySelector("#cartCount");
+    if(cc)cc.textContent="0";
+  }
   if(actions[1]){actions[1].textContent="↗️";actions[1].setAttribute("aria-label",t.share);actions[1].setAttribute("title",t.share);}
   if(actions[2]){actions[2].textContent="⚙️";actions[2].setAttribute("aria-label",t.settings);actions[2].setAttribute("title",t.settings);}
   updateCount();
@@ -1431,7 +1454,7 @@ function openProductModal(type,i){
   function load(){try{const x=JSON.parse(localStorage.getItem(KEY)||"[]");return Array.isArray(x)?x:[]}catch(e){return[]}}
   function save(x){localStorage.setItem(KEY,JSON.stringify(x))}
   function cart(){
-    try{const x=JSON.parse(localStorage.getItem("cart")||"[]");return Array.isArray(x)?x:[]}catch(e){return[]}
+    try{const x=JSON.parse(localStorage.getItem("kgp_cart")||"[]");return Array.isArray(x)?x:[]}catch(e){return[]}
   }
   function total(c){return c.reduce((s,x)=>{const p=getProduct(x);return s+(p?Number(discountedPrice(p)||0)*Number(x.q||1):0)},0)}
   window.saveKhiroOrder=function(){
@@ -1565,31 +1588,302 @@ function openProductModal(type,i){
 })();
 </script>
 
-<script>
-/* Temporary password gate: password = 2003 */
-(function(){
-  const lock=document.getElementById('updateLock');
-  const pass=document.getElementById('updatePassword');
-  const btn=document.getElementById('updateUnlock');
-  const error=document.getElementById('updateError');
-  document.body.classList.add('update-locked');
 
-  function unlock(){
-    if(pass.value === '2003'){
-      lock.style.display='none';
-      document.body.classList.remove('update-locked');
-      error.textContent='';
-      pass.value='';
-    }else{
-      error.textContent='كلمة السر غير صحيحة.';
-      pass.select();
-    }
+<!-- KHIRO TELECOM PRO BUSINESS LAYER v10
+     هدفه: سهولة الشراء + تقليل أخطاء الطلب + إدارة المخزون + اقتراح البيع المكمل.
+     لا يغيّر كتالوجك الحالي ولا يمسح بيانات localStorage. -->
+<style id="khiro-pro-v10">
+  .kpro-stock-badge{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:5px 9px;font-size:12px;font-weight:800;margin-top:7px}
+  .kpro-in{background:#eaf8ef;color:#16753b}.kpro-low{background:#fff6dc;color:#8a5a00}.kpro-out{background:#ffe9e9;color:#a51d1d}.kpro-untracked{background:#f2f4f7;color:#667085}
+  .kpro-panel{margin:18px 0;padding:16px;border:1px solid #e7eaf0;border-radius:18px;background:linear-gradient(180deg,#fff,#fafcff)}
+  .kpro-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}
+  .kpro-stat{padding:14px;border:1px solid #e8ebf0;border-radius:16px;background:#fff}
+  .kpro-stat b{display:block;font-size:21px;margin-top:5px}
+  .kpro-muted{color:#667085;font-size:12px}
+  .kpro-stock-row{display:grid;grid-template-columns:1.5fr .7fr .7fr auto;gap:8px;align-items:center;padding:9px 0;border-bottom:1px solid #eee}
+  .kpro-stock-row input{width:100%;box-sizing:border-box}
+  .kpro-chip{display:inline-flex;align-items:center;gap:4px;padding:5px 9px;border-radius:999px;background:#eef4ff;color:#175cd3;font-size:12px;font-weight:800}
+  .kpro-suggest{margin-top:14px;padding:13px;border-radius:16px;background:#f8fbff;border:1px solid #dbeafe}
+  .kpro-suggest-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:9px}
+  .kpro-suggest button{width:100%;text-align:right;border:1px solid #e4e7ec;background:#fff;border-radius:12px;padding:10px;cursor:pointer}
+  .kpro-order-id{font-weight:900;color:#175cd3}
+  @media(max-width:650px){.kpro-stock-row{grid-template-columns:1fr 85px 85px}.kpro-stock-row .kpro-actions{grid-column:1/-1}}
+</style>
+
+<script id="khiro-pro-v10-script">
+(function(){
+  "use strict";
+
+  const STOCK_KEY="kgp_stock_v1";
+  const SENT_ORDER_KEY="khiro_last_sent_order_v1";
+  const RECENT_KEY="khiro_recent_products_v1";
+
+  function safeJSON(key,fallback){
+    try{const v=JSON.parse(localStorage.getItem(key)||"null");return v==null?fallback:v}catch(e){return fallback}
   }
-  btn.addEventListener('click',unlock);
-  pass.addEventListener('keydown',function(e){
-    if(e.key==='Enter') unlock();
-  });
-  setTimeout(function(){pass.focus();},100);
+  function saveJSON(key,v){try{localStorage.setItem(key,JSON.stringify(v))}catch(e){}}
+  function escP(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+  function allLists(){
+    return [
+      ["s",typeof data!=="undefined"&&Array.isArray(data)?data:[], "الشاشات"],
+      ["b",typeof batteries!=="undefined"&&Array.isArray(batteries)?batteries:[], "البطاريات"],
+      ["c",typeof covers!=="undefined"&&Array.isArray(covers)?covers:[], "الكوفرات"],
+      ["h",typeof charges!=="undefined"&&Array.isArray(charges)?charges:[], "ناب شارج"]
+    ];
+  }
+  function stockMap(){return safeJSON(STOCK_KEY,{})}
+  function stockKey(type,i){
+    const a=allLists().find(x=>x[0]===type), p=a&&a[1][i];
+    return p ? type+"|"+String(p[0])+"|"+String(p[1])+"|"+String(p[2]||"") : type+"|"+i;
+  }
+  function getStock(type,i){
+    const m=stockMap(), k=stockKey(type,i);
+    return Object.prototype.hasOwnProperty.call(m,k) ? Number(m[k]) : null;
+  }
+  function setStock(type,i,value){
+    const n=Math.max(0,Math.floor(Number(value)));
+    const m=stockMap();m[stockKey(type,i)]=n;saveJSON(STOCK_KEY,m);
+  }
+  function stockInfo(type,i){
+    const n=getStock(type,i);
+    if(n===null) return {n:null,cls:"kpro-untracked",label:"المخزون غير متابع"};
+    if(n<=0) return {n,cls:"kpro-out",label:"غير متوفر"};
+    if(n<=3) return {n,cls:"kpro-low",label:"باقي "+n};
+    return {n,cls:"kpro-in",label:"متوفر • "+n};
+  }
+  function productFromKey(k){
+    try{
+      const [type,idx]=String(k).split(":"); return window.getProduct({k:type+":"+idx});
+    }catch(e){return null}
+  }
+
+  // إصلاح مهم: سجل الطلبات كان يقرأ مفتاح localStorage مختلفاً عن مفتاح السلة الفعلي.
+  // نربطه بالسلة الحقيقية، ونمنع تكرار نفس الطلب عند الضغط أكثر من مرة.
+  function makeOrderFingerprint(){
+    const cart=safeJSON("kgp_cart",[]);
+    return JSON.stringify(cart||[]);
+  }
+  function saveOrderOnce(){
+    const cart=safeJSON("kgp_cart",[]);
+    if(!Array.isArray(cart)||!cart.length)return;
+    const fp=makeOrderFingerprint();
+    if(localStorage.getItem(SENT_ORDER_KEY)===fp)return;
+    try{
+      if(typeof window.saveKhiroOrder==="function"){
+        window.saveKhiroOrder();
+        localStorage.setItem(SENT_ORDER_KEY,fp);
+      }
+    }catch(e){}
+  }
+
+  // استبدال وظيفة حفظ الطلب القديمة بنسخة صحيحة ومتوافقة مع kgp_cart.
+  window.saveKhiroOrder=function(){
+    const c=safeJSON("kgp_cart",[]);
+    if(!Array.isArray(c)||!c.length)return;
+    const getP=window.getProduct, disc=window.discountedPrice;
+    if(typeof getP!=="function")return;
+    const snapshot=c.map(x=>{
+      const p=getP(x); return p?{
+        model:String(p[0]||"")+" — "+String(p[1]||""),
+        type:String(p[2]||""),
+        qty:Number(x.q||1),
+        price:Number(typeof disc==="function"?disc(p):p[3]||0)
+      }:null;
+    }).filter(Boolean);
+    if(!snapshot.length)return;
+    const total=snapshot.reduce((s,x)=>s+x.price*x.qty,0);
+    let h=safeJSON("khiro_order_history",[]);
+    if(!Array.isArray(h))h=[];
+    const fp=JSON.stringify(c);
+    if(h[0] && h[0]._fp===fp)return;
+    const customer={
+      name:String(document.getElementById("customerName")?.value||"").trim(),
+      phone:String(document.getElementById("customerPhone")?.value||"").trim(),
+      location:String(document.getElementById("customerLocation")?.value||"").trim()
+    };
+    h.unshift({id:Date.now(),date:new Date().toISOString(),items:snapshot,total,customer,_fp:fp});
+    saveJSON("khiro_order_history",h.slice(0,100));
+  };
+
+  // مخزون: لا نفترض أن المخزون معروف. المنتجات الحالية تبقى قابلة للطلب حتى يحدد صاحب المتجر كمية.
+  const originalAddCart=window.addCart;
+  if(typeof originalAddCart==="function"){
+    window.addCart=function(type,i){
+      const si=stockInfo(type,i);
+      if(si.n!==null && si.n<=0){
+        if(typeof window.toast==="function")window.toast("هذا المنتج غير متوفر حالياً","error");
+        else alert("هذا المنتج غير متوفر حالياً.");
+        return;
+      }
+      originalAddCart(type,i);
+    };
+  }
+
+  function addStockBadges(){
+    const map=[
+      ["products","s"],["batteryProducts","b"],["coverProducts","c"],["chargeProducts","h"]
+    ];
+    map.forEach(([id,type])=>{
+      const box=document.getElementById(id);if(!box)return;
+      const cards=box.querySelectorAll("article,.productCard,.card");
+      cards.forEach(card=>{
+        if(card.querySelector(".kpro-stock-badge"))return;
+        const buttons=card.querySelectorAll("button");
+        let idx=-1;
+        buttons.forEach(b=>{
+          const m=(b.getAttribute("onclick")||"").match(/addCart\(['"]([sbch])['"],\s*(\d+)\)/);
+          if(m && m[1]===type)idx=Number(m[2]);
+        });
+        if(idx<0)return;
+        const s=stockInfo(type,idx);
+        const el=document.createElement("div");
+        el.className="kpro-stock-badge "+s.cls;
+        el.textContent=s.label;
+        card.appendChild(el);
+        if(s.n!==null && s.n<=0)buttons.forEach(b=>{if((b.textContent||"").includes("إضافة للسلة")){b.disabled=true;b.style.opacity=".5"}})
+      });
+    });
+  }
+
+  // بيع مكمل ذكي داخل السلة: يبحث عن منتجات لها علاقة بنفس الموديل.
+  function renderSuggestions(){
+    const box=document.getElementById("cart");if(!box)return;
+    const old=document.getElementById("kproSuggestions");if(old)old.remove();
+    const cart=safeJSON("kgp_cart",[]);
+    if(!Array.isArray(cart)||!cart.length)return;
+    const first=productFromKey(cart[0].k);if(!first)return;
+    const nq=typeof window.norm==="function"?window.norm(first[1]):String(first[1]).toLowerCase();
+    const tokens=nq.split(/\s+/).filter(x=>x.length>=3).slice(0,3);
+    if(!tokens.length)return;
+    const candidates=[];
+    allLists().forEach(([type,list,label])=>list.forEach((p,i)=>{
+      if(type==="s"&&String(p[1])===String(first[1]))return;
+      const t=typeof window.norm==="function"?window.norm((p||[]).slice(0,3).join(" ")):String((p||[]).slice(0,3).join(" ")).toLowerCase();
+      if(tokens.some(x=>t.includes(x))){
+        const k=type+":"+i;
+        if(!cart.some(c=>c.k===k))candidates.push({type,i,p,label});
+      }
+    }));
+    const unique=[];const seen=new Set();
+    candidates.forEach(x=>{const k=x.type+"|"+x.p[0]+"|"+x.p[1];if(!seen.has(k)){seen.add(k);unique.push(x)}});
+    if(!unique.length)return;
+    const top=unique.slice(0,4);
+    const wrap=document.createElement("div");wrap.id="kproSuggestions";wrap.className="kpro-suggest";
+    wrap.innerHTML="<b>💡 قد تحتاج أيضاً لهذا الموديل</b><div class='kpro-suggest-grid'>"+
+      top.map(x=>`<button type="button" data-t="${escP(x.type)}" data-i="${x.i}"><b>${escP(x.p[0])} — ${escP(x.p[1])}</b><br><span class="kpro-muted">${escP(x.label)}</span></button>`).join("")+
+      "</div>";
+    box.appendChild(wrap);
+    wrap.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
+      const t=b.dataset.t,i=Number(b.dataset.i);
+      if(typeof window.addCart==="function")window.addCart(t,i);
+    }));
+  }
+
+  // لوحة إدارة أعمال: مخزون + تنبيهات + عدد المنتجات.
+  function ensureAdminPanel(){
+    const admin=document.getElementById("adminSection");if(!admin)return;
+    if(document.getElementById("kproAdminPanel"))return;
+    const panel=document.createElement("div");panel.id="kproAdminPanel";panel.className="kpro-panel";
+    panel.innerHTML=`
+      <div class="top"><h2>📦 مركز المخزون الذكي</h2><span class="kpro-chip">PRO</span></div>
+      <div class="kpro-grid">
+        <div class="kpro-stat"><span class="kpro-muted">إجمالي المنتجات</span><b id="kproTotalProducts">0</b></div>
+        <div class="kpro-stat"><span class="kpro-muted">مخزون منخفض</span><b id="kproLowStock">0</b></div>
+        <div class="kpro-stat"><span class="kpro-muted">غير متابع</span><b id="kproUntracked">0</b></div>
+        <div class="kpro-stat"><span class="kpro-muted">نافد</span><b id="kproOutStock">0</b></div>
+      </div>
+      <div style="margin-top:14px" class="kpro-muted">اكتب الكمية الفعلية. ترك المنتج غير متابع يعني أن الزبون يستطيع طلبه كالمعتاد.</div>
+      <div id="kproStockRows" style="margin-top:8px"></div>`;
+    const privateNote=admin.querySelector(".adminPrivateNote");
+    if(privateNote&&privateNote.parentNode)privateNote.parentNode.insertBefore(panel,privateNote.nextSibling);
+    else admin.querySelector(".panel")?.prepend(panel);
+  }
+  function renderStockAdmin(){
+    ensureAdminPanel();const rows=document.getElementById("kproStockRows");if(!rows)return;
+    let total=0,low=0,out=0,untracked=0;let html="";
+    allLists().forEach(([type,list,label])=>{
+      list.forEach((p,i)=>{
+        total++;const s=stockInfo(type,i);
+        if(s.n===null)untracked++;else if(s.n<=0)out++;else if(s.n<=3)low++;
+        html+=`<div class="kpro-stock-row">
+          <div><b>${escP(p[0])} — ${escP(p[1])}</b><div class="kpro-muted">${escP(label)} • ${escP(p[2]||"")}</div></div>
+          <input type="number" min="0" inputmode="numeric" placeholder="غير متابع" value="${s.n===null?"":s.n}" data-stock-type="${type}" data-stock-index="${i}">
+          <span class="kpro-stock-badge ${s.cls}">${escP(s.label)}</span>
+          <div class="kpro-actions"><button class="btn" type="button" data-stock-clear="${type}|${i}">غير متابع</button></div>
+        </div>`;
+      });
+    });
+    rows.innerHTML=html||"<div class='kpro-muted'>لا توجد منتجات.</div>";
+    document.getElementById("kproTotalProducts").textContent=total;
+    document.getElementById("kproLowStock").textContent=low;
+    document.getElementById("kproUntracked").textContent=untracked;
+    document.getElementById("kproOutStock").textContent=out;
+    rows.querySelectorAll("input[data-stock-type]").forEach(inp=>inp.addEventListener("change",()=>{
+      setStock(inp.dataset.stockType,Number(inp.dataset.stockIndex),inp.value);
+      renderStockAdmin(); addStockBadges();
+    }));
+    rows.querySelectorAll("[data-stock-clear]").forEach(btn=>btn.addEventListener("click",()=>{
+      const [type,i]=btn.dataset.stockClear.split("|"),m=stockMap();delete m[stockKey(type,Number(i))];saveJSON(STOCK_KEY,m);
+      renderStockAdmin();addStockBadges();
+    }));
+  }
+
+  // تحسينات تجربة الشراء: حفظ آخر المنتجات المفتوحة/المضافة، وتذكير قبل الخروج مع سلة ممتلئة.
+  function rememberRecent(type,i){
+    const p=allLists().find(x=>x[0]===type)?.[1]?.[i];if(!p)return;
+    let r=safeJSON(RECENT_KEY,[]);if(!Array.isArray(r))r=[];
+    const item={type,i,name:String(p[0]||"")+" — "+String(p[1]||"")};
+    r=[item,...r.filter(x=>!(x.type===type&&Number(x.i)===i))].slice(0,8);saveJSON(RECENT_KEY,r);
+  }
+  const oldOpenProduct=window.openProductModal;
+  if(typeof oldOpenProduct==="function"){
+    window.openProductModal=function(type,i){rememberRecent(type,i);return oldOpenProduct(type,i)}
+  }
+
+  function bindOrderValidation(){
+    const order=document.getElementById("order");if(!order||order.dataset.kproBound)return;
+    order.dataset.kproBound="1";
+    order.addEventListener("click",function(e){
+      const name=document.getElementById("customerName")?.value.trim();
+      const phone=document.getElementById("customerPhone")?.value.trim();
+      const loc=document.getElementById("customerLocation")?.value.trim();
+      if(!name||!phone||!loc)return;
+      // لا نسجل الطلب مرتين. الحفظ يتم قبل فتح واتساب.
+      saveOrderOnce();
+    },true);
+  }
+
+  function init(){
+    bindOrderValidation();
+    ensureAdminPanel();
+    // بعد كل إعادة رسم للكتالوج، أعد إظهار حالة المخزون.
+    if(typeof window.renderScreens==="function"){
+      const rs=window.renderScreens; window.renderScreens=function(){const r=rs.apply(this,arguments);setTimeout(addStockBadges,0);return r}
+    }
+    if(typeof window.renderBatteries==="function"){
+      const rb=window.renderBatteries; window.renderBatteries=function(){const r=rb.apply(this,arguments);setTimeout(addStockBadges,0);return r}
+    }
+    if(typeof window.renderCovers==="function"){
+      const rc=window.renderCovers; window.renderCovers=function(){const r=rc.apply(this,arguments);setTimeout(addStockBadges,0);return r}
+    }
+    if(typeof window.renderCharges==="function"){
+      const rh=window.renderCharges; window.renderCharges=function(){const r=rh.apply(this,arguments);setTimeout(addStockBadges,0);return r}
+    }
+    const openCartOld=window.openCart;
+    if(typeof openCartOld==="function" && !openCartOld.__kpro){
+      const f=function(){const r=openCartOld.apply(this,arguments);setTimeout(()=>{renderSuggestions();bindOrderValidation()},0);return r};
+      f.__kpro=true;window.openCart=f;
+    }
+    // ربط تغيّر السلة لتحديث الاقتراحات بدون تدخل المستخدم.
+    document.addEventListener("click",function(e){
+      const b=e.target.closest?.("button");
+      if(!b)return;
+      if((b.getAttribute("onclick")||"").includes("changeCart")||(b.getAttribute("onclick")||"").includes("addCart"))setTimeout(()=>{renderSuggestions();addStockBadges()},50);
+    },true);
+    setTimeout(()=>{addStockBadges();renderSuggestions();renderStockAdmin()},900);
+  }
+
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
 })();
 </script>
 
