@@ -712,8 +712,8 @@ footer{
     <p>التطبيق قيد التحديث حالياً.</p>
     <p class="developer">المبرمج محمد حراشي</p>
     <input id="updatePassword" type="password" inputmode="numeric" autocomplete="off"
-           placeholder="أدخل كلمة السر" aria-label="كلمة السر">
-    <button id="updateUnlock" type="button">دخول</button>
+           placeholder="أدخل كلمة السر" aria-label="كلمة السر" onkeydown="if(event.key==='Enter'){event.preventDefault();window.unlockUpdate();}">
+    <button id="updateUnlock" type="button" onclick="window.unlockUpdate()">دخول</button>
     <div id="updateError" class="error" aria-live="polite"></div>
   </div>
 </div>
@@ -1884,6 +1884,74 @@ function openProductModal(type,i){
   }
 
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
+})();
+</script>
+
+
+<script>
+(function(){
+  const UPDATE_PASSWORD = "2003";
+
+  function normalizeUpdatePassword(v){
+    return String(v ?? "")
+      .replace(/[٠-٩]/g, d => String("٠١٢٣٤٥٦٧٨٩".indexOf(d)))
+      .replace(/[\u200B-\u200D\uFEFF]/g, "")
+      .trim();
+  }
+
+  // نجعل الوظيفة عامة حتى يعمل زر "دخول" حتى لو حصل خطأ في سكربت آخر داخل التطبيق.
+  window.unlockUpdate = function(){
+    const lock = document.getElementById("updateLock");
+    const input = document.getElementById("updatePassword");
+    const error = document.getElementById("updateError");
+
+    if (normalizeUpdatePassword(input ? input.value : "") === UPDATE_PASSWORD) {
+      if (lock) {
+        lock.style.display = "none";
+        lock.setAttribute("aria-hidden", "true");
+      }
+      document.body.classList.remove("update-locked");
+      if (input) input.value = "";
+      if (error) error.textContent = "";
+    } else {
+      if (error) error.textContent = "كلمة السر غير صحيحة.";
+      if (input) {
+        input.focus();
+        input.select();
+      }
+    }
+  };
+
+  function initUpdateLock(){
+    const lock = document.getElementById("updateLock");
+    const input = document.getElementById("updatePassword");
+    const button = document.getElementById("updateUnlock");
+
+    if (!lock || !input || !button) return;
+
+    document.body.classList.add("update-locked");
+
+    // ربط الزر مباشرة.
+    button.onclick = window.unlockUpdate;
+
+    // زر Enter من لوحة المفاتيح.
+    input.onkeydown = function(e){
+      if (e.key === "Enter") {
+        e.preventDefault();
+        window.unlockUpdate();
+      }
+    };
+
+    setTimeout(function(){
+      try { input.focus(); } catch(e) {}
+    }, 150);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initUpdateLock);
+  } else {
+    initUpdateLock();
+  }
 })();
 </script>
 
