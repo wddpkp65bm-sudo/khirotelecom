@@ -705,18 +705,6 @@ footer{
 </style>
 </head>
 <body>
-
-<div id="updateLock" role="dialog" aria-modal="true" aria-labelledby="updateTitle">
-  <div class="update-box">
-    <div class="update-icon">🔧</div>
-    <h2 id="updateTitle">يتم تحديث التطبيق</h2>
-    <p>التطبيق قيد التحديث حالياً.</p>
-    <p class="developer">المبرمج محمد حراشي</p>
-    <input id="updatePassword" type="password" inputmode="numeric" autocomplete="off"
-           placeholder="أدخل كلمة السر" aria-label="كلمة السر" onkeydown="if(event.key==='Enter'){event.preventDefault();window.unlockUpdate();}">
-    <button id="updateUnlock" type="button" onclick="window.unlockUpdate()">دخول</button>
-    <div id="updateError" class="error" aria-live="polite"></div>
-  </div>
 </div>
 
 
@@ -726,6 +714,7 @@ footer{
 <button type="button" onclick="showKhiroBon()" title="إنشاء Bon">🧾 Bon</button>
     <button class="btn headerIconBtn" onclick="shareApp()" aria-label="مشاركة" title="مشاركة التطبيق">↗️</button>
     <button class="btn headerIconBtn settingsHeaderBtn" onclick="openCustomerSettings()" aria-label="الإعدادات" title="الإعدادات">⚙️</button>
+    <button class="btn headerIconBtn" id="accountHeaderBtn" onclick="openCustomerAccount()" aria-label="حسابي" title="حسابي">👤</button>
   </div>
   <div class="brandLogo" aria-label="KHIRO TELECOM KGP" onclick="secretAdminAccess()" title="KHIRO TELECOM KGP">
     <div class="brandMain">KH<span>I</span>RO</div><div class="brandTelecom">TELECOM</div><div class="brandKgp">KGP</div>
@@ -738,6 +727,8 @@ footer{
   <div class="searchHelp">💡 كوفر = coque = cover = case • ناب شارج = nappe charge = charging flex • يمكنك كتابة الموديل فقط.</div>
   <nav id="brands"></nav>
 </div></header>
+
+<div id="khiroQuickFeatures" style="max-width:1150px;margin:10px auto 0;padding:0 16px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn" onclick="showNewArrivals()">🆕 وصل حديثًا</button><button class="btn" onclick="showFavorites()">❤️ المفضلة</button><button class="btn" onclick="openCustomerAccount()">👤 حسابي</button></div>
 
 <main class="wrap">
 
@@ -785,22 +776,29 @@ footer{
 <div class="top"><h2>⚙️ إدارة المتجر</h2><button class="btn" onclick="closeAdmin()">إغلاق</button></div>
 <div class="notice adminPrivateNote">🔐 لوحة خاصة. لا تظهر للزبائن، والدخول إليها محمي برمز الإدارة.</div>
 
+<div id="khiroCustomerAdmin" class="settingBox" style="margin:16px 0;border:1px solid #29476c;padding:16px;border-radius:14px;background:#081729">
+<h3 style="margin-top:0">👥 العملاء المسجلون</h3>
+<div class="hint">يظهر هنا العملاء الذين سجلوا على هذا الجهاز. للمزامنة بين جميع هواتف الزبائن والإدارة نحتاج ربط قاعدة بيانات سحابية مجانية.</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0"><input id="customerAdminSearch" placeholder="🔎 ابحث باسم العميل أو الهاتف" style="flex:1;min-width:220px"><button class="btn" onclick="renderCustomerAdmin()">تحديث</button></div>
+<div id="customerAdminStats" style="font-weight:800;margin-bottom:10px"></div>
+<div class="tableWrap"><table><thead><tr><th>#</th><th>الاسم</th><th>الهاتف</th><th>مكان التوصيل</th><th>التسجيل</th><th>الطلبات</th></tr></thead><tbody id="customerRows"></tbody></table></div>
+</div>
 <h3>➕ إضافة / تعديل شاشة</h3><div class="notice">💡 المنتجات الجديدة المضافة في آخر تحديث سعرها الافتراضي <b>00 دج</b>. عدّل نوع الشاشة والسعر من هنا قبل عرضها للزبائن.</div>
-<div class="form"><input id="fbrand" placeholder="الماركة"><input id="fmodel" placeholder="الموديل"><input id="fkind" placeholder="نوع الشاشة"><input id="fprice" type="number" value="0" placeholder="السعر دج"><input id="fimage" placeholder="رابط الصورة (اختياري)"></div>
+<div class="form"><input id="fbrand" placeholder="الماركة"><input id="fmodel" placeholder="الموديل"><input id="fkind" placeholder="نوع الشاشة"><input id="fprice" type="number" value="0" placeholder="السعر دج"><input id="fimage" placeholder="رابط الصورة (اختياري)"><label class="btn" style="display:flex;align-items:center;justify-content:center;gap:6px">📷 صورة من الهاتف<input id="fimageFile" type="file" accept="image/*" class="hidden"></label></div>
 <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" id="screenSaveBtn" onclick="saveScreenProduct()">+ إضافة شاشة</button><button class="btn" onclick="cancelScreenEdit()">إلغاء التعديل</button></div>
 
 <h3 style="margin-top:25px">🔋 إضافة / تعديل بطارية</h3><div class="notice">💡 البطاريات الجديدة المضافة في آخر تحديث سعرها الافتراضي <b>00 دج</b>. عدّل النوع والسعر من هنا.</div>
-<div class="form"><input id="fbbrand" placeholder="الماركة"><input id="fbmodel" placeholder="الموديل / رقم البطارية"><input id="fbprice" type="number" value="0" placeholder="السعر دج"><input id="fbimage" placeholder="رابط الصورة (اختياري)"></div>
+<div class="form"><input id="fbbrand" placeholder="الماركة"><input id="fbmodel" placeholder="الموديل / رقم البطارية"><input id="fbprice" type="number" value="0" placeholder="السعر دج"><input id="fbimage" placeholder="رابط الصورة (اختياري)"><label class="btn" style="display:flex;align-items:center;justify-content:center;gap:6px">📷 صورة من الهاتف<input id="fbimageFile" type="file" accept="image/*" class="hidden"></label></div>
 <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" id="batterySaveBtn" onclick="saveBatteryProduct()">+ إضافة بطارية</button><button class="btn" onclick="cancelBatteryEdit()">إلغاء التعديل</button></div>
 
 <h3 style="margin-top:25px">📱 إضافة / تعديل كوفر</h3>
 <div class="notice">💡 أضف الماركة والموديل، ويمكنك كتابة اللون أو النوع. السعر الافتراضي للمنتج الجديد <b>00 دج</b>.</div>
-<div class="form"><input id="fcbrand" placeholder="الماركة"><input id="fcmodel" placeholder="الموديل"><input id="fctype" placeholder="النوع / اللون (اختياري)"><input id="fcprice" type="number" value="0" placeholder="السعر دج"><input id="fcimage" placeholder="رابط الصورة (اختياري)"></div>
+<div class="form"><input id="fcbrand" placeholder="الماركة"><input id="fcmodel" placeholder="الموديل"><input id="fctype" placeholder="النوع / اللون (اختياري)"><input id="fcprice" type="number" value="0" placeholder="السعر دج"><input id="fcimage" placeholder="رابط الصورة (اختياري)"><label class="btn" style="display:flex;align-items:center;justify-content:center;gap:6px">📷 صورة من الهاتف<input id="fcimageFile" type="file" accept="image/*" class="hidden"></label></div>
 <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" id="coverSaveBtn" onclick="saveCoverProduct()">+ إضافة كوفر</button><button class="btn" onclick="cancelCoverEdit()">إلغاء التعديل</button></div>
 
 <h3 style="margin-top:25px">🔌 إضافة / تعديل ناب شارج</h3>
 <div class="notice">💡 اكتب موديل الهاتف أو رقم القطعة. يمكنك استعمال: Nappe charge / Charging Flex / Connecteur de charge.</div>
-<div class="form"><input id="fchbrand" placeholder="الماركة"><input id="fchmodel" placeholder="الموديل / رقم الناب"><input id="fchtype" placeholder="النوع (اختياري)"><input id="fchprice" type="number" value="0" placeholder="السعر دج"><input id="fchimage" placeholder="رابط الصورة (اختياري)"></div>
+<div class="form"><input id="fchbrand" placeholder="الماركة"><input id="fchmodel" placeholder="الموديل / رقم الناب"><input id="fchtype" placeholder="النوع (اختياري)"><input id="fchprice" type="number" value="0" placeholder="السعر دج"><input id="fchimage" placeholder="رابط الصورة (اختياري)"><label class="btn" style="display:flex;align-items:center;justify-content:center;gap:6px">📷 صورة من الهاتف<input id="fchimageFile" type="file" accept="image/*" class="hidden"></label></div>
 <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" id="chargeSaveBtn" onclick="saveChargeProduct()">+ إضافة ناب شارج</button><button class="btn" onclick="cancelChargeEdit()">إلغاء التعديل</button></div>
 
 <h3 style="margin-top:25px">🏪 إعدادات المتجر</h3>
@@ -870,11 +868,34 @@ footer{
     </div>
 
     <div class="settingBox">
+      <b>🎨 المظهر</b>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+        <button class="btn" onclick="setKhiroTheme('dark')">🌙 ليلي</button>
+        <button class="btn" onclick="setKhiroTheme('light')">☀️ نهاري</button>
+        <button class="btn" onclick="setKhiroFont(-1)">A−</button>
+        <button class="btn" onclick="setKhiroFont(0)">A</button>
+        <button class="btn" onclick="setKhiroFont(1)">A+</button>
+      </div>
+    </div>
+    <div class="settingBox">
+      <b>🔔 الإشعارات</b>
+      <div style="display:flex;gap:8px;align-items:center;margin-top:10px"><button class="btn" onclick="toggleKhiroNotifications()" id="notifyBtn">تفعيل الإشعارات</button><span class="hint" id="notifyState"></span></div>
+    </div>
+
+<div class="settingBox">
       <b id="settingsAboutTitle">ℹ️ ملاحظة</b>
       <div class="hint" id="settingsAboutText">هذه الإعدادات خاصة بالزبون ولا تغيّر أسعار أو بيانات المتجر.</div>
     </div>
   </div>
 </div>
+
+<div id="customerAccountModal" class="modal" onclick="if(event.target===this)closeCustomerAccount()"><div class="sheet" style="max-width:520px">
+<div class="top"><h2>👤 حساب الزبون</h2><button class="btn" onclick="closeCustomerAccount()">إغلاق</button></div>
+<div class="notice">سجّل اسمك ورقم هاتفك مرة واحدة لتسهيل طلباتك القادمة.</div>
+<div class="form"><input id="accountName" placeholder="الاسم الكامل *"><input id="accountPhone" type="tel" placeholder="رقم الهاتف *"><input id="accountLocation" placeholder="مكان التوصيل"></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="btn primary" onclick="saveCustomerAccount()">💾 حفظ الحساب</button><button class="btn danger" onclick="logoutCustomerAccount()">تسجيل الخروج</button></div>
+<div id="accountStatus" class="hint" style="margin-top:10px"></div>
+</div></div>
 
 <div id="cartModal" class="modal" onclick="if(event.target===this)closeCart()"><div class="sheet">
 <div class="top"><h2>🛒 سلة الطلب</h2><div style="display:flex;gap:7px"><button class="btn danger" onclick="clearCart()">🗑️ تفريغ</button><button class="btn" onclick="closeCart()">إغلاق</button></div></div>
@@ -1903,71 +1924,69 @@ function openProductModal(type,i){
 </script>
 
 
-<script>
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script id="khiro-supabase-connection">
 (function(){
-  const UPDATE_PASSWORD = "2003";
-
-  function normalizeUpdatePassword(v){
-    return String(v ?? "")
-      .replace(/[٠-٩]/g, d => String("٠١٢٣٤٥٦٧٨٩".indexOf(d)))
-      .replace(/[\u200B-\u200D\uFEFF]/g, "")
-      .trim();
-  }
-
-  // نجعل الوظيفة عامة حتى يعمل زر "دخول" حتى لو حصل خطأ في سكربت آخر داخل التطبيق.
-  window.unlockUpdate = function(){
-    const lock = document.getElementById("updateLock");
-    const input = document.getElementById("updatePassword");
-    const error = document.getElementById("updateError");
-
-    if (normalizeUpdatePassword(input ? input.value : "") === UPDATE_PASSWORD) {
-      if (lock) {
-        lock.style.display = "none";
-        lock.setAttribute("aria-hidden", "true");
-      }
-      document.body.classList.remove("update-locked");
-      if (input) input.value = "";
-      if (error) error.textContent = "";
-    } else {
-      if (error) error.textContent = "كلمة السر غير صحيحة.";
-      if (input) {
-        input.focus();
-        input.select();
-      }
-    }
-  };
-
-  function initUpdateLock(){
-    const lock = document.getElementById("updateLock");
-    const input = document.getElementById("updatePassword");
-    const button = document.getElementById("updateUnlock");
-
-    if (!lock || !input || !button) return;
-
-    document.body.classList.add("update-locked");
-
-    // ربط الزر مباشرة.
-    button.onclick = window.unlockUpdate;
-
-    // زر Enter من لوحة المفاتيح.
-    input.onkeydown = function(e){
-      if (e.key === "Enter") {
-        e.preventDefault();
-        window.unlockUpdate();
-      }
-    };
-
-    setTimeout(function(){
-      try { input.focus(); } catch(e) {}
-    }, 150);
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initUpdateLock);
-  } else {
-    initUpdateLock();
+  const SUPABASE_URL='https://cgxmggreyduwwbquqizp.supabase.co';
+  const SUPABASE_PUBLISHABLE_KEY='sb_publishable_iAS3129kG5R0RFWRezRYQA_Mk9w_m65';
+  if(window.supabase && window.supabase.createClient){
+    window.khiroSupabase=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+    window.khiroCloudReady=true;
   }
 })();
 </script>
-
+<script id="khiro-customer-and-new-features">
+(function(){
+  const CUSTOMER_KEY='khiro_customer_profile_v1', CUSTOMERS_KEY='khiro_customers_v1', NEW_KEY='khiro_new_arrivals_v1';
+  function load(k,d){try{const x=JSON.parse(localStorage.getItem(k)||'null');return x??d}catch(e){return d}}
+  function save(k,v){localStorage.setItem(k,JSON.stringify(v))}
+  window.khiroCustomers=load(CUSTOMERS_KEY,[]);
+  function current(){return load(CUSTOMER_KEY,null)}
+  function fill(){const c=current(); if(!c)return; ['accountName','accountPhone','accountLocation'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.value=c[['name','phone','location'][i]]||''}); const n=document.getElementById('customerName'),ph=document.getElementById('customerPhone'),lo=document.getElementById('customerLocation'); if(n)n.value=c.name||'';if(ph)ph.value=c.phone||'';if(lo)lo.value=c.location||'';}
+  window.openCustomerAccount=function(){document.getElementById('customerAccountModal').classList.add('show');fill();const c=current();document.getElementById('accountStatus').textContent=c?'الحساب محفوظ على هذا الجهاز.':'لم يتم تسجيل الحساب بعد.'}
+  window.closeCustomerAccount=function(){document.getElementById('customerAccountModal').classList.remove('show')}
+  window.saveCustomerAccount=function(){const name=document.getElementById('accountName').value.trim(),phone=document.getElementById('accountPhone').value.trim(),location=document.getElementById('accountLocation').value.trim();if(!name||!phone){alert('أدخل الاسم ورقم الهاتف.');return}const old=current(), now=new Date().toISOString(), c={id:old?.id||('C'+Date.now()),name,phone,location,createdAt:old?.createdAt||now,orders:old?.orders||0,lastOrderAt:old?.lastOrderAt||null};save(CUSTOMER_KEY,c);
+    // Cloud sync: send the customer record to Supabase while keeping local backup.
+    if(window.khiroSupabase){
+      window.khiroSupabase.from('customers').insert({name:c.name,phone:c.phone,location:c.location||null,created_at:c.createdAt||now,order_count:Number(c.orders||0),last_order_at:c.lastOrderAt||null}).then(function(res){
+        if(res.error && !/duplicate|unique/i.test(res.error.message||'')) console.warn('Supabase customer sync:',res.error.message);
+      }).catch(function(err){console.warn('Supabase customer sync:',err)});
+    }
+    let list=load(CUSTOMERS_KEY,[]);const idx=list.findIndex(x=>x.id===c.id||x.phone===phone);if(idx>=0)list[idx]={...list[idx],...c};else list.unshift(c);save(CUSTOMERS_KEY,list);window.khiroCustomers=list;fill();document.getElementById('accountStatus').textContent='تم حفظ الحساب.';toast('تم حفظ حسابك 👤','success');try{renderCustomerAdmin()}catch(_){} }
+  window.logoutCustomerAccount=function(){localStorage.removeItem(CUSTOMER_KEY);['accountName','accountPhone','accountLocation'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=''});const n=document.getElementById('customerName'),ph=document.getElementById('customerPhone'),lo=document.getElementById('customerLocation');if(n)n.value='';if(ph)ph.value='';if(lo)lo.value='';document.getElementById('accountStatus').textContent='تم تسجيل الخروج من هذا الجهاز.';toast('تم تسجيل الخروج','success')}
+  window.renderCustomerAdmin=function(){const rows=document.getElementById('customerRows');if(!rows)return;const q=norm(document.getElementById('customerAdminSearch')?.value||'');const list=load(CUSTOMERS_KEY,[]).filter(c=>!q||norm(c.name+' '+c.phone+' '+(c.location||'')).includes(q));const all=load(CUSTOMERS_KEY,[]);document.getElementById('customerAdminStats').textContent='إجمالي العملاء: '+all.length;rows.innerHTML=list.map((c,i)=>`<tr><td>${i+1}</td><td><b>${esc(c.name)}</b></td><td>${esc(c.phone)}</td><td>${esc(c.location||'—')}</td><td>${c.createdAt?new Date(c.createdAt).toLocaleDateString('fr-DZ'):'—'}</td><td>${Number(c.orders||0)}</td></tr>`).join('')||'<tr><td colspan="6" style="text-align:center;padding:20px">لا يوجد عملاء.</td></tr>'}
+  window.showNewArrivals=function(){const old=document.getElementById('newArrivalsModal');if(old)old.remove();const arr=load(NEW_KEY,[]);const items=arr.map(k=>{const p=getProduct({k});if(!p)return '';const inf=keyInfo(k);return `<div class="compareRow"><div><b>${esc(p[0])} — ${esc(p[1])}</b><div class="muted">${esc(p[2]||'')} • ${priceUnset(p)?'السعر غير محدد':money(displayPrice(p))}</div></div><button class="btn primary" onclick="document.getElementById('newArrivalsModal')?.remove();addCart('${inf.type}',${inf.i})">🛒</button></div>`}).join('');document.body.insertAdjacentHTML('beforeend',`<div id="newArrivalsModal" class="modal show" onclick="if(event.target===this)this.remove()"><div class="sheet" style="max-width:650px"><div class="top"><h2>🆕 وصل حديثًا</h2><button class="btn" onclick="this.closest('.modal').remove()">إغلاق</button></div>${items||'<div class="hint">لا توجد منتجات جديدة بعد.</div>'}</div></div>`)}
+  function markNew(type,i){let a=load(NEW_KEY,[]),k=productKey(type,i);if(!a.includes(k))a.unshift(k);save(NEW_KEY,a.slice(0,100))}
+  window.markKhiroNew=markNew;
+  // Image upload helper: stores compressed image as data URL in the existing product image slot.
+  window.khiroReadImage=function(input,targetId){const file=input?.files?.[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{const img=new Image();img.onload=()=>{const max=900,scale=Math.min(1,max/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=Math.round(img.width*scale);c.height=Math.round(img.height*scale);c.getContext('2d').drawImage(img,0,0,c.width,c.height);document.getElementById(targetId).value=c.toDataURL('image/jpeg',0.78)};img.src=reader.result};reader.readAsDataURL(file)}
+  ['fimageFile','fbimageFile','fcimageFile','fchimageFile'].forEach((id)=>{document.getElementById(id)?.addEventListener('change',e=>{const map={fimageFile:'fimage',fbimageFile:'fbimage',fcimageFile:'fcimage',fchimageFile:'fchimage'};window.khiroReadImage(e.target,map[id])})});
+  // Dark/light mode and font size
+  const THEME='khiro_theme_v1', FONT='khiro_font_v1', NOTIFY='khiro_notify_v1';
+  window.setKhiroTheme=function(t){localStorage.setItem(THEME,t);document.documentElement.dataset.khiroTheme=t;document.body.style.background=t==='light'?'#f5f7fb':'';document.body.style.color=t==='light'?'#111827':'';toast(t==='light'?'الوضع النهاري ☀️':'الوضع الليلي 🌙','success')};
+  window.setKhiroFont=function(d){let n=Number(localStorage.getItem(FONT)||0)+Number(d||0);n=Math.max(-1,Math.min(1,n));localStorage.setItem(FONT,n);document.documentElement.style.setProperty('--khiro-font-scale',n===1?'1.08':n===-1?'0.94':'1');toast('تم تغيير حجم الخط','success')};
+  window.toggleKhiroNotifications=function(){const on=localStorage.getItem(NOTIFY)!=='1';localStorage.setItem(NOTIFY,on?'1':'0');if(on&&'Notification' in window&&Notification.requestPermission)Notification.requestPermission().catch(()=>{});updateNotify();toast(on?'تم تفعيل الإشعارات 🔔':'تم إيقاف الإشعارات','success')};
+  function updateNotify(){const b=document.getElementById('notifyBtn'),s=document.getElementById('notifyState');if(!b)return;const on=localStorage.getItem(NOTIFY)==='1';b.textContent=on?'إيقاف الإشعارات':'تفعيل الإشعارات';s.textContent=on?'مفعلة':'غير مفعلة'}
+  // preload account data into order fields
+  document.addEventListener('DOMContentLoaded',()=>{const c=current();if(c){fill()}document.documentElement.dataset.khiroTheme=localStorage.getItem(THEME)||'dark';document.documentElement.style.setProperty('--khiro-font-scale',localStorage.getItem(FONT)==='1'?'1.08':localStorage.getItem(FONT)==='-1'?'0.94':'1');updateNotify();});
+  // Compatibility aliases for stronger search.
+  const oldExpanded=window.expandedSearch;
+  window.expandedSearch=function(q){let r=oldExpanded?oldExpanded(q):norm(q).split(' ').filter(Boolean);const n=norm(q);const extras=[];n.split(' ').forEach(t=>{if(/^a\d{1,3}$/.test(t)){const num=t.slice(1);extras.push(t,'m'+num);if(num==='10')extras.push('a10s','a10c','m10')}});return [...new Set(r.concat(extras))]};
+  const oldMatch=window.matchProduct;
+  // Render hooks: newly added products get a timestamp and appear in New Arrivals.
+  const oldSaveScreen=window.saveScreenProduct; window.saveScreenProduct=function(){const before=data.length;oldSaveScreen();if(data.length>before)markNew('s',data.length-1)};
+  const oldSaveBattery=window.saveBatteryProduct; window.saveBatteryProduct=function(){const before=batteries.length;oldSaveBattery();if(batteries.length>before)markNew('b',batteries.length-1)};
+  const oldSaveCover=window.saveCoverProduct; window.saveCoverProduct=function(){const before=covers.length;oldSaveCover();if(covers.length>before)markNew('c',covers.length-1)};
+  const oldSaveCharge=window.saveChargeProduct; window.saveChargeProduct=function(){const before=charges.length;oldSaveCharge();if(charges.length>before)markNew('h',charges.length-1)};
+  const oldRenderAdmin=window.renderAdminTables;window.renderAdminTables=function(){oldRenderAdmin();renderCustomerAdmin()};
+})();
+</script>
+<style>
+:root{--khiro-font-scale:1}body{font-size:calc(14px * var(--khiro-font-scale))}.customerAccountCard{border:1px solid #29476c}.settingBox{margin-top:12px}.hidden{display:none!important}
+html[data-khiro-theme="light"] body{background:#f5f7fb!important;color:#111827!important}html[data-khiro-theme="light"] .siteHeader{background:#fff!important;color:#111827!important}html[data-khiro-theme="light"] .panel,html[data-khiro-theme="light"] .sheet,html[data-khiro-theme="light"] .card,html[data-khiro-theme="light"] .feature,html[data-khiro-theme="light"] .adminCard{background:#fff!important;color:#111827!important}html[data-khiro-theme="light"] .muted,html[data-khiro-theme="light"] .hint{color:#64748b!important}
+</style>
 </body></html>
