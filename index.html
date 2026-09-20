@@ -955,7 +955,11 @@ const OUTILLAGE_DEFAULTS=[["RF4","RF 6565PRO","MICROSCOPE",97500,"https://255543
 let data=loadArray("kgp_data",SCREEN_DEFAULTS), batteries=loadArray("kgp_batteries",BATTERY_DEFAULTS);
 let covers=loadArray("kgp_covers",COVER_DEFAULTS), coverFrames=loadArray("kgp_cover_frames",COVER_FRAME_DEFAULTS), charges=loadArray("kgp_charges",CHARGE_DEFAULTS), outillage=loadArray("kgp_outillage",OUTILLAGE_DEFAULTS), basket=loadArray("kgp_cart",[]);
 if(!charges.length) charges=clone(CHARGE_DEFAULTS);
-if(!outillage.length) outillage=clone(OUTILLAGE_DEFAULTS);
+if(!Array.isArray(outillage) || !outillage.length) outillage=clone(OUTILLAGE_DEFAULTS);
+outillage=outillage.filter(p=>Array.isArray(p)).map(p=>[
+  String(p[0]??"OUTILLAGE"), String(p[1]??""), String(p[2]??""),
+  Number(p[3]||0), p[4]||null, p[5]||""
+]);
 let settings=loadObject("kgp_settings",DEFAULT_SETTINGS), brand="الكل", currentScreenEdit=-1, currentBatteryEdit=-1, currentCoverEdit=-1, currentCoverFrameEdit=-1, currentChargeEdit=-1, priceMode="retail";
 const LCD_PRICE_UPDATES=[["Oppo","A31 / A5 2020","Original",1480],["Oppo","F5","Original",1450],["Oppo","Find X2 Neo / Reno 4 Pro","Standard",8800],["Oppo","Find X5 Lite","Original",12900],["Oppo","Find X5","Original",4400],["Oppo","Find X6 Pro 5G","Original",25400],["Oppo","Find X7 Ultra","Original",13900],["Oppo","Find X8 Pro","Original",13900],["Oppo","Find X8 Ultra","Original",36400],["Oppo","Neo5","Standard",950],["Oppo","Reno 11F / Reno 8 Pro","Incell",1950],["Oppo","Reno 12 / 12 Pro / Pro A5 Pro","Incell",1950],["Oppo","Reno 2F","OLED",5500],["Oppo","Reno 4 / A93 All Version","OLED",7100],["Oppo","Reno 5","Original",10700],["Oppo","Reno 7","Incell",1850],["Samsung","A04","Original",1480],["Samsung","A04S","Original",1480],["Samsung","A05","Original",1550],["Samsung","A05S / M14 4G","Original",1780],["Samsung","A07","Original",1770],["Samsung","A10S","Original",1480],["Samsung","A11 / M11","Original",1550],["Samsung","A13 / F13 / M13","Original",1490],["Samsung","A14 4G","Original",1550],["Samsung","A14 5G","Original",1480],["Samsung","A20 / M10S","OLED",3900],["Samsung","A21S","Original",1550],["Samsung","A260","Original",1500],["Samsung","A40S","OLED",4350],["Samsung","A80","Incell",2100],["Samsung","A80","OLED",8400],["Samsung","J3110","Incell",1550],["Samsung","J320","Incell",1450],["Samsung","M23 / M33","Original",1650],["Samsung","M34","OLED",4950],["Samsung","S5 Neo","Standard",4700],["Redmi","10 5G","Original",1620],["Redmi","12C / Poco C55","Original",1550],["Redmi","15C","Original",1730],["Redmi","9A / 9C","Original",1450],["Redmi","A5 Big","Original",1770],["Redmi","Mi 12 / Mi 12X","Original",8150],["Redmi","Mi 13 Lite","Original",7300],["Redmi","Mi 13 Ultra","Original",11500],["Redmi","Mi A3","Incell",1580],["Redmi","Mi A3","OLED",5150],["Redmi","Note 11 4G","OLED",4350],["Redmi","Note 11E","Original",1630],["Redmi","Note 13 Pro / M6 Pro","Incell",1550],["Redmi","Note 9","Original",1550],["Redmi","Note 9 Pro","Original",1450],["Realme","11 5G","Original",1580],["Realme","12 Pro Plus","Original",5850],["Realme","C11 2021","Original",1480],["Realme","C21Y / C25Y","Original",1380],["Realme","C31","Original",1550],["Realme","C51 / C53","Original",1530],["Realme","V30 / V30T / V20","Original",1680],["Honor","10 Lite","Original",1450],["Honor","200 Lite / X8B / X8C","Original",4750],["Honor","200 Pro","Original",5150],["Honor","300","Original",4900],["Honor","400 Lite","Original",4800],["Honor","50 Lite / Nova 8i / X20","Original",1550],["Honor","50 / Nova 9","Original",6200],["Honor","70 / 70 Pro","Original",5200],["Honor","90 Lite / 90","Original",2180],["Honor","Magic 5 Pro","Original",5800],["Honor","X20SE / Play 5T Pro / 7 Pro","Original",1950],["Honor","X6B / X6B Plus","Original",1680],["Honor","X7A","Original",1680],["Honor","X7B / Play 8T / Play 50 Plus","Original",1550],["Honor","X8B / X8C / X50I / X60I","Incell",2150],["Honor","X9 / X30 / X40I / Magic 4 Lite","Original",2150],["Honor","X9A / X40 / Magic 5 Lite","Incell",2450],["Honor","Y7A / X40 GT","Original",1950],["Huawei","Mate 10 Lite","Original",1450],["Huawei","Mate 30 Pro","Incell",1950],["Huawei","Nova 5T / Honor 20 Pro","Original",1550],["Huawei","Nova 8i / Honor 5 Lite","Original",1550],["Huawei","Nova Y70 / Y71","Original",1450],["Huawei","P20 Lite","Original",1550],["Huawei","P20","Original",3100],["Huawei","P30","Incell",1550],["Huawei","P30","OLED",4100],["Huawei","P30 Pro","Original",10400],["Huawei","P6","Original",950],["Huawei","Y6-2 / Honor 5A","Original",1450],["Huawei","Y7 P 2020","Original",1400],["Huawei","Y9 2019","Original",1630],["Infinix","GT 30 Pro / Hot60 Pro / Spark 40 Pro","Incell",2580],["Infinix","Smart 3 Plus / S4","Original",1580],["Infinix","Smart 6","Original",1450],["Infinix","Smart 8 / Smart 8 HD","Original",1530],["Infinix","Smart 9 / Smart 10 / Hot 60i / Hot 60 5G","Original",1600],["Ace","Buzz 4 Ultra","Original",1950],["Ace","Buzz 5 Lite","Original",1850],["Google","Pixel 5A","Incell",3100],["Google","Pixel 6","Incell",3100],["Google","Pixel 6 Pro","OLED",5900],["Google","Pixel 6A","Incell",3450],["Google","Pixel 7 Pro","OLED",6800],["Poco","X6 Pro / F7","Incell",2350],["Tecno","Camon 20 / Note 30 Pro","Incell",1450],["Tecno","Camon 30 / Pova 6 Pro / Note 40 5G","Incell",1450],["Tecno","Spark Go 2023","Standard",1550],["Vivo","Y22S","Original",1550],["Vivo","Y31 / Y11 / Y17","Original",1550],["Vivo","Y35","Original",1550]];
 const PDF_NEW_SCREEN_DEFAULTS=[["Oppo","A15 A16","Original",1450,null],["Oppo","A15","Original 100/100",1630,null],["Oppo","A54 5G","Original",1650,null],["Oppo","A74 -A94","OLED",6450,null],["Oppo","F11","Original",1580,null],["Oppo","FIND X2 X2 PRO 1+ 8 PRO","Original",8900,null],["Oppo","FIND X5 PRO / ONE PLUS 11","Original",25400,null],["Oppo","RENO 4 A93 F17 PRO","Incell",1780,null],["Oppo","RENO 5","Incell",1700,null],["Oppo","RENO 5 GT MASTER GT NEO2T GT NEO 5 FINS X3 LITE","Incell",1850,null],["Oppo","RENO 7","OLED",7600,null],["Oppo","RENO 7 RENO 8","Original",11200,null],["Oppo","RENO 9 10 PRO PLUS 11 PRO + 12 PRO A2 PRO A3 PRO","Incell",3650,null],["Samsung","A01 CORE","Standard",1550,null],["Samsung","A03 CORE .","Original",1470,null],["Samsung","A03S A02S A04E","Original",1480,null],["Samsung","A03S","Original",1550,null],["Samsung","A06 5G M06","Original",1630,null],["Samsung","A15 M15","OLED",5650,null],["Samsung","A16 4G","Incell Fram",2180,null],["Samsung","A22 4G","Original Fram",7800,null],["Samsung","A26 M16 A16 F16 A17 M17","Incell",1950,null],["Samsung","A30 / A50","OLED",4400,null],["Samsung","A31","OLED",3900,null],["Samsung","A35 A55 M35","Original",12400,null],["Samsung","A42 5G","Original Fram",12600,null],["Samsung","A71 ORIGINAL","Standard",11500,null],["Samsung","A72 A725 A726","Incell Fram",1700,null],["Samsung","A750","Incell No Fram",1640,null],["Samsung","B310 B312","Standard",270,null],["Samsung","C5 ORIGINAL","Standard",5150,null],["Samsung","J260","Standard",1450,null],["Samsung","J7 PRO","OLED",3450,null],["Samsung","M12 A022 A04S A13 5G","Standard",1480,null],["Samsung","M20","Original",1530,null],["Samsung","M30","OLED",4450,null],["Samsung","M32 4G","Incell Fram",1980,null],["Samsung","M34 A24 A25","Incell",1550,null],["Samsung","M55 F55 C55","Big OLED",5400,null],["Samsung","NOTE 20 ULTRA","Incell Fram",8200,null],["Samsung","S10 PLUS INCCEL","Standard",4350,null],["Redmi","12 REDMI 13","Original",1750,null],["Redmi","13C POCO C65 POCO M6 PRO","Original",1550,null],["Redmi","8/ 8A","Original",1480,null],["Redmi","9T POCO M3 .","Original",1530,null],["Redmi","A5 2025","Standard",1680,null],["Redmi","MI 10 LITE MI 11 LITE","Original",8500,null],["Redmi","MI 10T 5G MI 11 LITE 5G","Incell",2350,null],["Redmi","NOTE 10 4G NOTE 11 4G","Incell",1730,null],["Redmi","NOTE 10 5G/ POCO M3 PRO","Original",1750,null],["Redmi","NOTE 10 PRO","Incell",1850,null],["Redmi","NOTE 11 4G","Incell",1730,null],["Redmi","NOTE 11 PRO NOTE 12 PRO 4G","Incell Fram",1700,null],["Redmi","NOTE 12 4G POCO X5 5G","OLED",4750,null],["Redmi","NOTE 7","Original",1540,null],["Redmi","NOTE 8 PRO .","Original",1680,null],["Redmi","NOTE 8T","Standard",1550,null],["Realme","13 PRO +","Incell",1950,null],["Realme","7I 6I REALME 8 5G","Original",1620,null],["Realme","8I 9I A54 A53 A76","Standard",1680,null],["Realme","GT NEO 3 RENO 8 PRO + ONE+10R","Incell",1850,null],["Honor","200 SMART/HONOR 90 SMART/HONOR PLAY 50PLUS","Standard",1650,null],["Honor","X5B X5B + X6A","Original",1550,null],["Honor","X6A X5 +","Original",1550,null],["Honor","X9B","Incell Fram",3700,null],["Honor","X9C X60 PRO","Incell",3700,null],["Huawei","NOVA 7I NOVA 7 PRO","Original",1550,null],["Huawei","NOVA 9SE NOVA11 HONOR 50 SE","Original",1550,null],["Huawei","P30 LITE NOVA 4E","Original",1730,null],["Huawei","P40 LITE 5G","Standard",1450,null],["Huawei","Y3-2","Standard",1000,null],["Huawei","Y6 PRIM 2019","Original",1500,null],["Huawei","Y7 PRIM 2017","Original",1450,null],["Huawei","Y7 PRIM 2018 7C","Original",1550,null],["Huawei","Y7 PRIM 2019 11 PIN","Original",1480,null],["Huawei","Y7 PRO 2019 6 PIN","Standard",1480,null],["iPhone","12 PRO MAX","Incell",2700,null],["iPhone","12- 12 PRO","Incell",2700,null],["iPhone","13 PRO","Incell",2750,null],["iPhone","13 PRO MAX","Incell",3100,null],["iPhone","14 PRO","Incell",4200,null],["iPhone","15","Incell",3700,null],["iPhone","15 PRO","Incell",3800,null],["iPhone","16 PRO","Incell",4750,null],["iPhone","16 PRO MAX","Incell",5300,null],["iPhone","6G PLUS","Standard",1400,null],["iPhone","7G","Standard",1680,null],["iPhone","7G PLUS","Standard",1680,null],["iPhone","8G PLUS","Standard",1680,null],["iPhone","XR","Incell",2200,null],["iPhone","XS","Incell",2150,null],["OnePlus","12R 1 PLUS 12R ACE 3 GT 6 NEO 6","Standard",8450,null],["Infinix","HOTE 10 SPARK 6 CAMON 16","Original",1400,null],["Infinix","HOTE 12 PLAY NOTE 12I NOTE 12 PRO","Original",1530,null],["Infinix","HOTE 50 4G SPARK 30 POVA 7 5G","Original",1550,null],["Infinix","HOTE 50 PRO PLUS NOTE 40 PRO NOTE 40 PRO PLUS X6851","Incell",1950,null],["Infinix","HOTE 9 PLAY .","Original",1480,null],["Infinix","NOTE 50 NOTE 50 PRO + 4G","Incell",1550,null],["Infinix","SMART 5 HOTE 10 I SPARK 7 7T SPARK 8 POP 5 PRO P36 P37","Original",1450,null],["Infinix","SMART 7 HOT 30 I .","Original",1480,null],["Infinix","ZERO 8 ZERO 8I X687","Standard",1750,null],["Condor","A55 PLUS","Standard",2950,null],["Condor","C8S","Standard",2600,null],["Condor","L4 PRO","Standard",1900,null],["Condor","M3","Standard",2900,null],["Condor","NOVA 60I","Standard",1870,null],["Condor","P6","Standard",900,null],["Condor","P6 PRO","Standard",1570,null],["Ace","BUZZ 4 BUZZ4 4S","Original",1950,null],["Ace","BUZZ 4 LITE .","Original",2280,null],["Ace","BUZZ 6 PRIM BUZZ 6 PRIM PLUS .","Original",1950,null],["China","M05","China",100,null],["China","M09","China",100,null],["China","M26","China",100,null],["China","M27","China",100,null],["Poco","F3 F3 PRO F4","Original",8700,null],["Poco","FONE F1","Standard",1580,null],["Poco","X3 X3 PRO","Original",1700,null],["Tecno","CAMON X","Standard",1450,null],["Itel","A37/A26","Original",1380,null],["Itel","A58 A49","Original",1640,null]];
@@ -1055,6 +1059,11 @@ function setActiveTab(which){
   document.getElementById(id)?.classList.add("primary")
 }
 function showCatalog(which){
+  const searchBox=document.getElementById("search");
+  if(searchBox && ["screens","batteries","covers","charges","outtilage"].includes(which)){
+    searchBox.value="";
+    if(typeof lastSearchValue!=="undefined") lastSearchValue="";
+  }
   ["screenSection","batterySection","coverSection","chargeSection","outtilageSection","adminSection"].forEach(id=>document.getElementById(id)?.classList.remove("show"));
   const target={screens:"screenSection",batteries:"batterySection",covers:"coverSection",charges:"chargeSection",outtilage:"outtilageSection"}[which]||"screenSection";
   document.getElementById(target).classList.add("show");setActiveTab(which);
@@ -1148,21 +1157,58 @@ function outillageImage(p){
   return "data:image/svg+xml;charset=UTF-8,"+encodeURIComponent(svg);
 }
 function renderOutillage(){
-  const q=document.getElementById("search").value,out=document.getElementById("outtilageProducts");
-  let shown=0;const idxs=[];out.innerHTML="";
-  outillage.forEach((p,i)=>{
+  const searchBox=document.getElementById("search");
+  const out=document.getElementById("outtilageProducts");
+  if(!out)return;
+  const q=searchBox?searchBox.value:"";
+  let shown=0; const idxs=[];
+  out.innerHTML="";
+
+  (Array.isArray(outillage)?outillage:[]).forEach((p,i)=>{
+    if(!Array.isArray(p))return;
     if(matchProduct(p,q,"outillage")){
-      idxs.push(i);shown++;
-      const google=p[5]||("https://www.google.com/search?tbm=isch&q="+encodeURIComponent((p[0]||"")+" "+(p[1]||"")));
-      out.innerHTML+=`<article class="card"><div class="picWrap"><span class="brandBadge">${esc(p[0])}</span><img class="pic" loading="lazy" decoding="async" src="${esc(outillageImage(p))}" alt="${esc(p[0]+" "+p[1])}"></div><div class="body"><div class="muted">${esc(p[0])} • ${esc(p[2]||"")}</div><div class="title">${esc(p[1])}</div><div class="muted">Référence / موديل</div><div style="font-weight:800;margin:5px 0">${esc(p[1])}</div><div class="muted">${priceLabel()}</div>${priceView(p)}<div class="actions"><button class="btn primary" onclick="addCart('o',${i})">🛒 أضف للسلة</button> <a class="btn" href="${esc(google)}" target="_blank" rel="noopener">🔎 صور الموديل</a></div></div></article>`;
+      idxs.push(i); shown++;
+      const brand=String(p[0]??"OUTILLAGE");
+      const model=String(p[1]??"");
+      const kind=String(p[2]??"");
+      const google=p[5] || ("https://www.google.com/search?tbm=isch&q="+encodeURIComponent(brand+" "+model));
+      out.insertAdjacentHTML("beforeend",
+        `<article class="card">
+          <div class="picWrap">
+            <span class="brandBadge">${esc(brand)}</span>
+            <img class="pic" loading="lazy" decoding="async"
+              src="${esc(outillageImage(p))}"
+              alt="${esc(brand+" "+model)}">
+          </div>
+          <div class="body">
+            <div class="muted">${esc(brand)} • ${esc(kind)}</div>
+            <div class="title">${esc(model)}</div>
+            <div class="muted">Référence / موديل</div>
+            <div style="font-weight:800;margin:5px 0">${esc(model)}</div>
+            <div class="muted">${priceLabel()}</div>
+            ${priceView(p)}
+            <div class="actions">
+              <button class="btn primary" onclick="addCart('o',${i})">🛒 أضف للسلة</button>
+              <a class="btn" href="${esc(google)}" target="_blank" rel="noopener">🔎 صور الموديل</a>
+            </div>
+          </div>
+        </article>`
+      );
     }
   });
-  if(!shown)out.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:40px;color:#aaa"><h3 style="color:#fff">🔎 لا توجد نتائج</h3><p>جرّب اسم الماركة أو رقم الموديل.</p></div>`;
-  decorateRendered("outtilageProducts","o",outillage,idxs);
-  const c=document.getElementById("outtilageCount");if(c)c.textContent=`(${outillage.length} منتج)`;
+
+  if(!shown){
+    out.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:40px;color:#aaa">
+      <h3 style="color:#fff">🔎 لا توجد نتائج</h3>
+      <p>جرّب اسم الماركة أو رقم الموديل.</p>
+    </div>`;
+  }
+
+  decorateRendered("outtilageProducts","o",Array.isArray(outillage)?outillage:[],idxs);
+  const c=document.getElementById("outtilageCount");
+  if(c)c.textContent=`(${Array.isArray(outillage)?outillage.length:0} منتج)`;
   updateCount();
 }
-
 function addCart(type,i){const key=type+":"+i,x=basket.find(z=>z.k===key);if(x)x.q++;else basket.push({k:key,q:1});saveAll();updateCount();openCart()}
 function getProduct(x){
   const [type,idx]=String(x.k).split(":");const n=Number(idx);
